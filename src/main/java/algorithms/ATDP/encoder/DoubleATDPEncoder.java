@@ -17,11 +17,6 @@ public class DoubleATDPEncoder extends Encoder {
     protected int contract_step = 0;
     protected int contract_lim = 8;
 
-    protected long total = 0;
-    protected double total_lead = 0;
-    protected double total_tail = 0;
-
-
     public DoubleATDPEncoder(String outputPath) {
         super(outputPath);
     }
@@ -32,11 +27,6 @@ public class DoubleATDPEncoder extends Encoder {
 
         boolean flag = ATDPTools.isEnd(value, e); // same end
         if (!flag) e = ATDPTools.getEnd(value);
-
-//        double abs_v = Math.abs(value);
-//        int dp = 0;
-//        double alpha = 0;
-//        while(abs_v >= ATDPTools.getP10(e+dp))dp++;
 
         int dp = 0;
         double alpha = 0;
@@ -55,15 +45,9 @@ public class DoubleATDPEncoder extends Encoder {
         double beta = value - alpha;
         long beta_star = Math.abs(Math.round((beta) / pow));
 
-//        int lead = BinaryTools.leadZeros((long) (value/pow),64);
-//        total_lead += lead;
-//        if(lead !=64)total_tail += BinaryTools.tailZeros((long) (value/pow),64);
-//        meta.put("CBL",64-(total_lead+total_tail)/total);
-
         if (dp >= 16) { // overflow Exception 10
             out.write(true);
             out.write(false);
-//            out.write(value, 64);
             ExceptionHandle(value);
             return;
         }
@@ -90,21 +74,6 @@ public class DoubleATDPEncoder extends Encoder {
         out.write(beta_star, ATDPTools.decimalBits(dp));
         this.previous_value = value;
     }
-
-
-//    protected void ExceptionHandle(double value) {
-//        long lv = Double.doubleToRawLongBits(value);
-//        long exp = ATDPTools.segment(lv, 2, 12);
-//        if (exp == previous_exp) {
-//            out.write(true);
-//            out.write(lv < 0);
-//            out.write(lv, 52);
-//        } else {
-//            out.write(false);
-//            out.write(lv, 64);
-//            previous_exp = exp;
-//        }
-//    }
 
     protected void ExceptionHandle(double value) {
         long lv = Double.doubleToRawLongBits(value);
@@ -142,7 +111,6 @@ public class DoubleATDPEncoder extends Encoder {
 
     @Override
     public int encode(double value) {
-//        total ++;
         paint(value);
         return out.track_bits();
     }

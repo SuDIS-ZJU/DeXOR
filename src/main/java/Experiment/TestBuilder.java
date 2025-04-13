@@ -74,7 +74,10 @@ public class TestBuilder {
     }
 
     private void dfs_compress(File dir) { // N datasets
-        if (!dir.isDirectory()) return;
+        if (!dir.isDirectory()) {
+            if (dir.getName().endsWith(".csv"))comp_dataset(dir.getName(), dir.getAbsolutePath());
+            return;
+        }
         File[] folder = dir.listFiles();
 
         if (folder != null) {
@@ -89,7 +92,10 @@ public class TestBuilder {
     }
 
     private void dfs_decompress(File dir) { // N datasets
-        if (!dir.isDirectory()) return;
+        if (!dir.isDirectory()) {
+            if (dir.getName().endsWith(".csv"))decomp_dataset(dir.getName(), dir.getAbsolutePath());
+            return;
+        }
         File[] folder = dir.listFiles();
 
         if (folder != null) {

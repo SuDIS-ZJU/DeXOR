@@ -26,4 +26,12 @@ public class BinaryTools {
         }
         return size;
     }
+
+    public static int CBL(long v,int size){
+        int lead = leadZeros(v,size);
+        int tail = tailZeros(v,size);
+        int CBL = size - lead;
+        if(CBL > 0)CBL -= tail;
+        return CBL;
+    }
 }
