@@ -60,7 +60,7 @@ public class DoubleATDPDecoder extends Decoder {
     @Override
     public double decodeDouble() {
         int con = in.readInt(2);
-        if (con == 2) { // overflow Exception
+        if (con == 3) { // overflow Exception
 //            return in.readDouble(64);
             return ExceptionDecode();
         }

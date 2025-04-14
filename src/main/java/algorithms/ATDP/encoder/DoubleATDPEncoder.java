@@ -47,14 +47,14 @@ public class DoubleATDPEncoder extends Encoder {
 
         if (dp >= 16) { // overflow Exception 10
             out.write(true);
-            out.write(false);
+            out.write(true);
             ExceptionHandle(value);
             return;
         }
 
-        if (flag && dp == previous_dp) { // same method 11
+        if (flag && dp == previous_dp) { // same method 10
             out.write(true);
-            out.write(true);
+            out.write(false);
         } else {
             out.write(false); // !flag || dp != pre_dp
             out.write(flag);

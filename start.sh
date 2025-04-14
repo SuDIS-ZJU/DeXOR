@@ -1,1 +1,1 @@
-docker run -it  --cpu-period=100000 --cpu-quota=25000 --memory="16g" -v /home/lcy/experiment/OL-TSC/src:/app/src  --name env-test test-env:latest /bin/bash
+docker run -it  --cpu-period=100000 --cpu-quota=25000 --memory="16g" -v /home/experiment/OL-TSC/src:/app/src  --name env-test test-env:latest /bin/bash
