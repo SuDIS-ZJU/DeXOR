@@ -24,14 +24,16 @@ public class Main {
                     result_path = args[++i];
                     break;
                 case "-m":
-                    try {
-                        String name = args[++i];
+                    methods = new AlgorithmEnums[]{};
+                    while(++i < args.length){
+                        String name = args[i];
                         AlgorithmEnums alg = AlgorithmEnums.CheckName(name);
-                        methods = new AlgorithmEnums[]{alg};
-                    } catch (Exception e) {
-//                        e.printStackTrace();
-                        return;
+                        if(alg==null){
+                            --i;
+                            break;
+                        }
                     }
+
                     break;
             }
         }

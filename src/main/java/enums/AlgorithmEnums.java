@@ -19,12 +19,12 @@ public enum AlgorithmEnums {
         return name;
     }
 
-    static public AlgorithmEnums CheckName(String name) throws Exception {
+    static public AlgorithmEnums CheckName(String name) {
         for(AlgorithmEnums algorithm : AlgorithmEnums.values()){
             if(name.equalsIgnoreCase(algorithm.name)){
                 return algorithm;
             }
         }
-        throw new Exception("No such algorithm");
+        return null;
     }
 }
