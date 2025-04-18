@@ -4,6 +4,9 @@ import Experiment.TestBuilder;
 import enums.AlgorithmEnums;
 import enums.DataTypeEnums;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Main {
     public static void main(String[] args) {
         String data_path = "./datasets/Overall";
@@ -24,7 +27,7 @@ public class Main {
                     result_path = args[++i];
                     break;
                 case "-m":
-                    methods = new AlgorithmEnums[]{};
+                    Set<AlgorithmEnums> set = new HashSet<>();
                     while(++i < args.length){
                         String name = args[i];
                         AlgorithmEnums alg = AlgorithmEnums.CheckName(name);
@@ -32,8 +35,9 @@ public class Main {
                             --i;
                             break;
                         }
+                        set.add(alg);
                     }
-
+                    if(!set.isEmpty())methods = set.toArray(new AlgorithmEnums[0]);
                     break;
             }
         }

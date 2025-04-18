@@ -46,6 +46,9 @@ Default is `./results`.
 The algorithm names are case-insensitive.
 Default is `DXOR`.
 
+You can test multiple algorithms in a manner similar to the example provided:
+`java -jar OL-TSC-1.0-jar-with-dependencies.jar -in  ./datasets/Overall -m ATDP Gorilla Chimp Chimp128 Elf ElfPlus`
+
 ## Notified
 
 The algorithms `[Elf, ElfPlus, Camel]` support only floating-point data types.
