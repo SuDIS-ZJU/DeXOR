@@ -1,4 +1,4 @@
-# Adaptive Tunning Data Precision Algorithm for Online-Lossless Time-series Compression
+# D-XOR: XOR-like Transcode in Decimal for Online Lossless Time Series Compression
 
 ---
 
@@ -34,7 +34,7 @@ Run this package with `java -jar` command, such as:
 You can identify this compression by setting these options:
 
 `-in [INPUT_PATH]` The source of the files to be compressed, currently supporting files in CSV format with the structure of `<timestamp, value>` for compression.
-Default is `./datasets/DataFromElf`.
+Default is `./datasets/Overall`.
 
 `-out [OUTPUT_PATH]` Where the compressed binary files stored.
 Default is `./storage`.
@@ -42,12 +42,12 @@ Default is `./storage`.
 `-log [LOG_PATH]` The results of experiment benchmarks will be located in `LOG_PATH`
 Default is `./results`.
 
-`-m [METHOD]` The `[METHOD]` parameter specifies the name of the compression algorithm to be used. Currently supported algorithms include `[Gorilla, Chimp, Chimp128, Elf, ElfPlus, Camel, ATDP]`. 
+`-m [METHOD]` The `[METHOD]` parameter specifies the name of the compression algorithm to be used. Currently supported algorithms include `[Gorilla, Chimp, Chimp128, Elf, ElfPlus, Camel, DXOR]`. 
 The algorithm names are case-insensitive.
-Default is `ATDP`.
+Default is `DXOR`.
 
 ## Notified
 
 The algorithms `[Elf, ElfPlus, Camel]` support only floating-point data types.
 
-The application scenario of the `[Camel]` algorithm requires that the number of decimal places be between 1 and 4.
+The application scenario of the **Lossless** `[Camel]` algorithm requires that the number of decimal places be between 1 and 4.

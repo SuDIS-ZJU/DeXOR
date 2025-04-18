@@ -1,6 +1,6 @@
 package algorithms;
 
-import algorithms.ATDP.ATDP;
+import algorithms.DXOR.DXOR;
 import algorithms.Camel.Camel;
 import algorithms.Chimp.Chimp;
 import algorithms.Chimp128.Chimp128;
@@ -11,7 +11,6 @@ import enums.AlgorithmEnums;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 用于管理所有压缩算法
@@ -26,15 +25,16 @@ public class AlgorithmsManager {
         AlgorithmClassMap.put(AlgorithmEnums.GORILLA.getName(), Gorilla.class);
         AlgorithmClassMap.put(AlgorithmEnums.CHIMP.getName(), Chimp.class);
         AlgorithmClassMap.put(AlgorithmEnums.CHIMP128.getName(), Chimp128.class);
-        AlgorithmClassMap.put(AlgorithmEnums.ATDP.getName(), ATDP.class);
+        AlgorithmClassMap.put(AlgorithmEnums.DXOR.getName(), DXOR.class);
         AlgorithmClassMap.put(AlgorithmEnums.Elf.getName(), Elf.class);
         AlgorithmClassMap.put(AlgorithmEnums.ElfPlus.getName(), ElfPlus.class);
         AlgorithmClassMap.put(AlgorithmEnums.Camel.getName(), Camel.class);
     }
 
-    public static Set<String> getSupportedAlgorithms() {
-        return AlgorithmClassMap.keySet();
-    }
+    // todo Check_Valid
+//    public static Set<String> getSupportedAlgorithms() {
+//        return AlgorithmClassMap.keySet();
+//    }
 
     public static Algorithm getAlgorithm(String algorithm_name) throws Exception {
         Class<?> clazz = AlgorithmClassMap.get(algorithm_name);

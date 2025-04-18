@@ -1,7 +1,7 @@
-package algorithms.ATDP;
+package algorithms.DXOR;
 
-public class ATDPTools {
-    private static final double log210 = 1 / Math.log10(2);
+public class DOXRTools {
+//    private static final double log210 = 1 / Math.log10(2);
     private static final int[] cost = new int[]{0, 4, 7, 10, 14, 17, 20, 24, 27, 30, 34, 37, 40, 44, 47, 50};
     private static final double eps = 1e-23;
     private static final int off = 23;

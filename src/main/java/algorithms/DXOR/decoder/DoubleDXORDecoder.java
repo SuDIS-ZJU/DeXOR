@@ -1,10 +1,10 @@
-package algorithms.ATDP.decoder;
+package algorithms.DXOR.decoder;
 
 import algorithms.Decoder;
-import algorithms.ATDP.ATDPTools;
+import algorithms.DXOR.DOXRTools;
 import enums.DataTypeEnums;
 
-public class DoubleATDPDecoder extends Decoder {
+public class DoubleDXORDecoder extends Decoder {
     protected int size = DataTypeEnums.DOUBLE.getSize();
     protected double previous_value = 0;
     protected int previous_end = 0;
@@ -18,12 +18,12 @@ public class DoubleATDPDecoder extends Decoder {
     protected double previous_alpha = 0;
 
 
-    public DoubleATDPDecoder(String inputPath) {
+    public DoubleDXORDecoder(String inputPath) {
         super(inputPath);
     }
 
     protected double ExceptionDecode() {
-        int bias = ATDPTools.getP2(rubber_cost - 1) - 1;
+        int bias = DOXRTools.getP2(rubber_cost - 1) - 1;
         long delta = in.readInt(rubber_cost) - bias;
         long lv;
         if (delta >= -bias && delta <= bias) {
@@ -34,7 +34,7 @@ public class DoubleATDPDecoder extends Decoder {
             lv = (lv << 52) | seg;
 
             if (rubber_cost > 1) {
-                int su_bias = ATDPTools.getP2(rubber_cost - 2) - 1;
+                int su_bias = DOXRTools.getP2(rubber_cost - 2) - 1;
                 if (delta >= -su_bias && delta <= su_bias) {
                     contract_step++;
                 } else {
@@ -47,7 +47,7 @@ public class DoubleATDPDecoder extends Decoder {
             }
         } else {
             lv = in.readLong(64);
-            previous_exp = ATDPTools.segment(lv, 2, 12);
+            previous_exp = DOXRTools.segment(lv, 2, 12);
 
             if (rubber_cost < 10) {
                 rubber_cost++;
@@ -69,14 +69,14 @@ public class DoubleATDPDecoder extends Decoder {
         if (con == 0 || con == 1) {
             if (con == 0) previous_end = in.readInt(5) - 20;
             previous_dp = in.readInt(4);
-            double pow = ATDPTools.getP10(previous_end + previous_dp);
-            previous_alpha = ATDPTools.truncate(previous_value / pow) * pow;
+            double pow = DOXRTools.getP10(previous_end + previous_dp);
+            previous_alpha = DOXRTools.truncate(previous_value / pow) * pow;
         }
 
         long sign = previous_alpha > 0 ? 1 : -1;
-        if (ATDPTools.comp(previous_alpha, 0) == 0) sign = in.readBoolean() ? 1 : -1; // sign
-        long beta_star = sign * in.readLong(ATDPTools.decimalBits(previous_dp));
-        double beta = beta_star * ATDPTools.getP10(previous_end);
+        if (DOXRTools.comp(previous_alpha, 0) == 0) sign = in.readBoolean() ? 1 : -1; // sign
+        long beta_star = sign * in.readLong(DOXRTools.decimalBits(previous_dp));
+        double beta = beta_star * DOXRTools.getP10(previous_end);
 
         previous_value = previous_alpha + beta;
 

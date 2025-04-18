@@ -1,11 +1,10 @@
-package algorithms.ATDP.encoder;
+package algorithms.DXOR.encoder;
 
 import algorithms.Encoder;
-import algorithms.ATDP.ATDPTools;
+import algorithms.DXOR.DOXRTools;
 import enums.DataTypeEnums;
-import utils.BinaryTools;
 
-public class DoubleATDPEncoder extends Encoder {
+public class DoubleDXOREncoder extends Encoder {
     protected int size = DataTypeEnums.DOUBLE.getSize();
     protected double previous_value = 0;
     protected int previous_end = 0;
@@ -17,7 +16,7 @@ public class DoubleATDPEncoder extends Encoder {
     protected int contract_step = 0;
     protected int contract_lim = 8;
 
-    public DoubleATDPEncoder(String outputPath) {
+    public DoubleDXOREncoder(String outputPath) {
         super(outputPath);
     }
 
@@ -25,15 +24,15 @@ public class DoubleATDPEncoder extends Encoder {
     private void paint(double value) {
         int e = previous_end;
 
-        boolean flag = ATDPTools.isEnd(value, e); // same end
-        if (!flag) e = ATDPTools.getEnd(value);
+        boolean flag = DOXRTools.isEnd(value, e); // same end
+        if (!flag) e = DOXRTools.getEnd(value);
 
         int dp = 0;
         double alpha = 0;
         while (dp < 16) {
-            double pow = ATDPTools.getP10(e + dp);
-            long a = ATDPTools.truncate(value / pow);
-            long b = ATDPTools.truncate(previous_value / pow);
+            double pow = DOXRTools.getP10(e + dp);
+            long a = DOXRTools.truncate(value / pow);
+            long b = DOXRTools.truncate(previous_value / pow);
             if (a == b) {
                 alpha = a * pow;
                 break;
@@ -41,7 +40,7 @@ public class DoubleATDPEncoder extends Encoder {
             dp++;
         }
 
-        double pow = ATDPTools.getP10(e);
+        double pow = DOXRTools.getP10(e);
         double beta = value - alpha;
         long beta_star = Math.abs(Math.round((beta) / pow));
 
@@ -67,26 +66,26 @@ public class DoubleATDPEncoder extends Encoder {
         }
 
         // extra info
-        if (ATDPTools.comp(alpha, 0) == 0) {
+        if (DOXRTools.comp(alpha, 0) == 0) {
             out.write(value > 0); // sign
         }
 
-        out.write(beta_star, ATDPTools.decimalBits(dp));
+        out.write(beta_star, DOXRTools.decimalBits(dp));
         this.previous_value = value;
     }
 
     protected void ExceptionHandle(double value) {
         long lv = Double.doubleToRawLongBits(value);
-        long exp = ATDPTools.segment(lv, 2, 12);
+        long exp = DOXRTools.segment(lv, 2, 12);
         long delta = exp - previous_exp;
-        int bias = ATDPTools.getP2(rubber_cost - 1) - 1;
+        int bias = DOXRTools.getP2(rubber_cost - 1) - 1;
         if (delta >= -bias && delta <= bias) {
             out.write(delta + bias, rubber_cost);
             out.write(lv < 0);
             out.write(lv, 52);
 
             if (rubber_cost > 1) {
-                int su_bias = ATDPTools.getP2(rubber_cost - 2) - 1;
+                int su_bias = DOXRTools.getP2(rubber_cost - 2) - 1;
                 if (delta >= -su_bias && delta <= su_bias) {
                     contract_step++;
                 } else {
@@ -98,7 +97,7 @@ public class DoubleATDPEncoder extends Encoder {
                 }
             }
         } else {
-            out.write(ATDPTools.getP2(rubber_cost) - 1, rubber_cost);
+            out.write(DOXRTools.getP2(rubber_cost) - 1, rubber_cost);
             out.write(lv, 64);
             contract_step = 0;
 

@@ -4,32 +4,35 @@ import Experiment.TestBuilder;
 import enums.AlgorithmEnums;
 import enums.DataTypeEnums;
 
-import java.util.Arrays;
-
 public class Main {
     public static void main(String[] args) {
-        String data_path = "./datasets/DataFromElf"; // DataFromElf test continuous random
+        String data_path = "./datasets/Overall";
         String store_path = "./storage";
         String result_path = "./results";
-        AlgorithmEnums[] methods = new AlgorithmEnums[]{AlgorithmEnums.ATDP};
+        AlgorithmEnums[] methods = new AlgorithmEnums[]{AlgorithmEnums.DXOR};
 //        AlgorithmEnums[] methods = AlgorithmEnums.values();
 
         for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("-in")) {
-                data_path = args[++i];
-            } else if (args[i].equals("-out")) {
-                store_path = args[++i];
-            } else if (args[i].equals("-log")) {
-                result_path = args[++i];
-            } else if (args[i].equals("-m")) {
-                try {
-                    String name = args[++i];
-                    AlgorithmEnums alg = AlgorithmEnums.CheckName(name);
-                    methods = new AlgorithmEnums[]{alg};
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return;
-                }
+            switch (args[i]) {
+                case "-in":
+                    data_path = args[++i];
+                    break;
+                case "-out":
+                    store_path = args[++i];
+                    break;
+                case "-log":
+                    result_path = args[++i];
+                    break;
+                case "-m":
+                    try {
+                        String name = args[++i];
+                        AlgorithmEnums alg = AlgorithmEnums.CheckName(name);
+                        methods = new AlgorithmEnums[]{alg};
+                    } catch (Exception e) {
+//                        e.printStackTrace();
+                        return;
+                    }
+                    break;
             }
         }
 

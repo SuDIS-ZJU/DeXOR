@@ -1,6 +1,5 @@
 package Experiment;
 
-import algorithms.AlgorithmsManager;
 import enums.AlgorithmEnums;
 import enums.DataTypeEnums;
 import org.apache.commons.csv.CSVFormat;
@@ -18,14 +17,12 @@ public class TestBuilder {
 
     private final String result_path;
 
-    private List<String> algorithms;
+    private final List<String> algorithms;
 
     private Map<String, List<List<String>>> results;
     private int index = 0;
 
     public TestBuilder(DataTypeEnums data_type, String data_path, String store_path, String result_path, AlgorithmEnums[] test_algorithms) {
-        File storage = new File(store_path);
-        if (!storage.exists()) storage.mkdir();
         this.data_type = data_type;
         this.data_path = data_path;
         this.store_path = store_path;
@@ -48,7 +45,7 @@ public class TestBuilder {
     private void createPath(String path){
         File directory = new File(path);
         if (!directory.exists()) {
-            boolean isCreated = directory.mkdirs(); // mkdirs()可以创建多级目录
+            directory.mkdirs();
         }
     }
 
@@ -85,7 +82,8 @@ public class TestBuilder {
                 String name = file.getName();
                 if (file.isDirectory()) dfs_compress(file);
                 else if (name.endsWith(".csv")) {
-                    comp_dataset(file.getName(), file.getAbsolutePath());
+                    name = name.substring(0, name.length() - 4);
+                    comp_dataset(name, file.getAbsolutePath());
                 }
             }
         }
@@ -103,7 +101,8 @@ public class TestBuilder {
                 String name = file.getName();
                 if (file.isDirectory()) dfs_decompress(file);
                 else if (name.endsWith(".csv")) {
-                    decomp_dataset(file.getName(), file.getAbsolutePath());
+                    name = name.substring(0, name.length() - 4);
+                    decomp_dataset(name, file.getAbsolutePath());
                 }
             }
         }
@@ -170,7 +169,7 @@ public class TestBuilder {
             }
             System.out.println("results save in " + path);
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 }

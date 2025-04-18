@@ -1,18 +1,18 @@
-package algorithms.ATDP;
+package algorithms.DXOR;
 
 import algorithms.Algorithm;
 import algorithms.Decoder;
 import algorithms.Encoder;
-import algorithms.ATDP.decoder.DoubleATDPDecoder;
-import algorithms.ATDP.encoder.DoubleATDPEncoder;
+import algorithms.DXOR.decoder.DoubleDXORDecoder;
+import algorithms.DXOR.encoder.DoubleDXOREncoder;
 import enums.DataTypeEnums;
 
-public class ATDP extends Algorithm {
-    public ATDP(){
+public class DXOR extends Algorithm {
+    public DXOR(){
         // Encoder
-        EncoderClassMap.put(DataTypeEnums.DOUBLE.getType(), DoubleATDPEncoder.class);
+        EncoderClassMap.put(DataTypeEnums.DOUBLE.getType(), DoubleDXOREncoder.class);
         // Decoder
-        DecoderClassMap.put(DataTypeEnums.DOUBLE.getType(), DoubleATDPDecoder.class);
+        DecoderClassMap.put(DataTypeEnums.DOUBLE.getType(), DoubleDXORDecoder.class);
     }
 
     protected Encoder getEncoder(String data_type, String output_path) throws Exception {
