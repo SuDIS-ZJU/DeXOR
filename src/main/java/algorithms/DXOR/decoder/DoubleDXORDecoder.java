@@ -69,6 +69,7 @@ public class DoubleDXORDecoder extends Decoder {
         if (con == 0 || con == 1) {
             if (con == 0) previous_end = in.readInt(5) - 20;
             previous_dp = in.readInt(4);
+            int k = previous_end + previous_dp;
             double pow = DOXRTools.getP10(previous_end + previous_dp);
             previous_alpha = DOXRTools.truncate(previous_value / pow) * pow;
         }

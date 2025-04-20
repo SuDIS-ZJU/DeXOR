@@ -9,6 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DecompBuilder {
+    private static final double[] EPS = new double[]{1, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10, 1e-11, 1e-12,
+            1e-13, 1e-14, 1e-15, 1e-16, 1e-17, 1e-18, 1e-19, 1e-20, 1e-21, 1e-22, 1e-23};
+
+
     private final Decoder decoder;
     private final TableStreamer table;
 
@@ -52,6 +56,16 @@ public class DecompBuilder {
 
     }
 
+    public static int getDecimalPlace(double value) {
+        String s = Double.toString(value);
+        int index = s.indexOf('.');
+        if (index == -1) {
+            return 0;
+        } else {
+            return (s.length() - 1) - index;
+        }
+    }
+
     private void test_decompressDouble() {
         while (true) {
             try {
@@ -59,15 +73,16 @@ public class DecompBuilder {
                 total++;
 
                 // debug
-//                if (table_name.equals("Food-price.csv") && total == 506) {
-//                    int k = 111;
-//                }
-
+                if (table_name.equals("Air-pressure") && total == 854) {
+                    int k = 111;
+                }
+                int place = getDecimalPlace(v);
+                double eps = EPS[place];
                 long start_time = System.nanoTime();
                 double dec_v = decoder.decodeDouble();
                 long end_time = System.nanoTime();
                 finish_time += (double) (end_time - start_time) / 1000000; // convert to ms
-                if (Math.abs(v - dec_v) > 1e-5) {
+                if (Math.abs(v - dec_v) >= eps) {
                     error_id = total;
                     System.out.println("Error happened at " + error_id + " with v=" + v + " in " + algorithm_name + " and decompress result is " + dec_v);
                     break;

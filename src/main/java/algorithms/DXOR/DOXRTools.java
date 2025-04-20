@@ -10,10 +10,16 @@ public class DOXRTools {
             1e-3, 1e-2, 1e-1, 1, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11, 1e12,
             1e13, 1e14, 1e15, 1e16, 1e17, 1e18, 1e19, 1e20, 1e21, 1e22, 1e23};
 
+    private static final long[] P10L = new long[]{1,10,100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000L,100000000000L,1000000000000L,10000000000000L,100000000000000L,1000000000000000L,10000000000000000L,100000000000000000L};
+
     private static final int[] P2 = new int[]{1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
 
     public static double getP10(int pow) {
         return P10[pow + off];
+    }
+
+    public static double getP10L(int pow) {
+        return P10[pow];
     }
 
     public static int getP2(int pow) {
@@ -35,8 +41,13 @@ public class DOXRTools {
     }
 
     public static boolean isInt(double value) {
-        return comp(value, Math.round(value), 1e-5) == 0;
+        return comp(value, Math.round(value), eps) == 0;
     }
+
+    public static boolean isInt(double value, double eps) {
+        return comp(value, Math.round(value), eps) == 0;
+    }
+
 
 
     public static boolean isEnd(double value, int end) {
@@ -45,7 +56,8 @@ public class DOXRTools {
         return isInt(alpha) && !isInt(beta);
     }
 
-    public static int getEnd(double value) {
+    public static int getEnd(double value, int last_end) {
+        if(isEnd(value,last_end))return last_end;
         String s = Double.toString(value);
         int index = s.indexOf('.');
         if (index == -1) {
@@ -60,6 +72,28 @@ public class DOXRTools {
             return index - (s.length() - 1);
         }
     }
+
+//    public static int getEnd(double value, int last_end){
+//        if(comp(value,0,eps) == 0)return 0;
+//        int q = last_end;
+//        double vq =value / getP10(q);
+//        if(isInt(vq,1e-5) ){
+//            vq  = value / getP10(q+1);
+//            while(isInt(vq,1e-5) ){
+//                q++;
+//                vq  = value / getP10(q+1);
+//            }
+//            return q;
+//        }else {
+//            q--;
+//            vq  = value / getP10(q);
+//            while (!isInt(vq,1e-5) ){
+//                q--;
+//                vq  = value / getP10(q);
+//            }
+//            return q;
+//        }
+//    }
 
     public static int decimalBits(int dp) {
         return cost[dp];
@@ -76,6 +110,12 @@ public class DOXRTools {
         int len = ed - st + 1;
         long mask = (1L << len) - 1;
         return (v >> (64 - ed)) & mask;
+    }
+
+    public static double epsilon(double value){
+        long lv = Double.doubleToRawLongBits(value);
+        long exp = segment( lv,2,12);
+        return Double.longBitsToDouble((exp-52)<<52);
     }
 
 }

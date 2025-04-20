@@ -8,7 +8,7 @@ public class DoubleDXOREncoder extends Encoder {
     protected int size = DataTypeEnums.DOUBLE.getSize();
     protected double previous_value = 0;
     protected int previous_end = 0;
-    protected int previous_dp = 0;
+    protected int previous_dp_star = 0;
 
     protected long previous_exp = 1023;
 
@@ -16,53 +16,67 @@ public class DoubleDXOREncoder extends Encoder {
     protected int contract_step = 0;
     protected int contract_lim = 8;
 
+    protected long id = 0;
+    protected int buffer_size_bits = 4;
+    protected int buffer_size;
+    protected double[] buffer;
+
     public DoubleDXOREncoder(String outputPath) {
         super(outputPath);
+        buffer_size = 1<<buffer_size_bits;
+        buffer = new double[buffer_size];
     }
 
 
-    private void paint(double value) {
-        int e = previous_end;
+    private void Decimal_XOR(double value) {
+//        int q = previous_end;
+//
+//        boolean flag = DOXRTools.isEnd(value, q); // same end
+//        if (!flag) q = DOXRTools.getEnd(value);
 
-        boolean flag = DOXRTools.isEnd(value, e); // same end
-        if (!flag) e = DOXRTools.getEnd(value);
+        int q = DOXRTools.getEnd(value,previous_end);
+        boolean flag = (q == previous_end);
 
-        int dp = 0;
+
+        int dp_star = 0;
         double alpha = 0;
-        while (dp < 16) {
-            double pow = DOXRTools.getP10(e + dp);
+        while (dp_star < 16) {
+            double pow = DOXRTools.getP10(q + dp_star);
             long a = DOXRTools.truncate(value / pow);
             long b = DOXRTools.truncate(previous_value / pow);
             if (a == b) {
                 alpha = a * pow;
                 break;
             }
-            dp++;
+            dp_star++;
         }
+        
+        int k = q + dp_star;
+        
 
-        double pow = DOXRTools.getP10(e);
+        double pow = DOXRTools.getP10(q);
         double beta = value - alpha;
         long beta_star = Math.abs(Math.round((beta) / pow));
 
-        if (dp >= 16) { // overflow Exception 10
+        if (dp_star >= 16) { // overflow Exception 10
             out.write(true);
             out.write(true);
             ExceptionHandle(value);
             return;
         }
 
-        if (flag && dp == previous_dp) { // same method 10
+        if (flag && dp_star == previous_dp_star) { // same method 10
             out.write(true);
             out.write(false);
         } else {
             out.write(false); // !flag || dp != pre_dp
             out.write(flag);
             if (!flag) { // 00
-                out.write(e + 20, 5);
-                previous_end = e;
+                out.write(q + 20, 5);
+                previous_end = q;
             }
-            out.write(dp, 4);
-            previous_dp = dp;
+            out.write(dp_star, 4);
+            previous_dp_star = dp_star;
         }
 
         // extra info
@@ -70,8 +84,9 @@ public class DoubleDXOREncoder extends Encoder {
             out.write(value > 0); // sign
         }
 
-        out.write(beta_star, DOXRTools.decimalBits(dp));
+        out.write(beta_star, DOXRTools.decimalBits(dp_star));
         this.previous_value = value;
+
     }
 
     protected void ExceptionHandle(double value) {
@@ -110,7 +125,8 @@ public class DoubleDXOREncoder extends Encoder {
 
     @Override
     public int encode(double value) {
-        paint(value);
+        id ++;
+        Decimal_XOR(value);
         return out.track_bits();
     }
 }

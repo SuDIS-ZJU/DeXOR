@@ -87,9 +87,9 @@ public class CompBuilder {
                 total++;
 
                 // debug
-//                if (table_name.equals("Food-price.csv") && total == 506) {
-//                    int k = 111;
-//                }
+                if (table_name.equals("Air-pressure") && total == 854) {
+                    int k = 111;
+                }
 
                 long start_time = System.nanoTime();
                 bits += encoder.encode(v);
