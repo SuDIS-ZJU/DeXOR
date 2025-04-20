@@ -4,6 +4,7 @@ import algorithms.Encoder;
 import algorithms.DXOR.DOXRTools;
 import enums.DataTypeEnums;
 
+
 public class DoubleDXOREncoder extends Encoder {
     protected int size = DataTypeEnums.DOUBLE.getSize();
     protected double previous_value = 0;
@@ -42,10 +43,10 @@ public class DoubleDXOREncoder extends Encoder {
         double alpha = 0;
         while (dp_star < 16) {
             double pow = DOXRTools.getP10(q + dp_star);
-            long a = DOXRTools.truncate(value / pow);
-            long b = DOXRTools.truncate(previous_value / pow);
+            double a = DOXRTools.truncate(value / pow) *pow;
+            double b = DOXRTools.truncate(previous_value / pow) *pow;
             if (a == b) {
-                alpha = a * pow;
+                alpha = a;
                 break;
             }
             dp_star++;
@@ -56,14 +57,16 @@ public class DoubleDXOREncoder extends Encoder {
 
         double pow = DOXRTools.getP10(q);
         double beta = value - alpha;
-        long beta_star = Math.abs(Math.round((beta) / pow));
+        long beta_star = Math.round((beta) / pow);
 
-        if (dp_star >= 16) { // overflow Exception 10
+        if (dp_star >= 16 || DOXRTools.comp(alpha+beta_star*pow,value,pow) != 0) { // Exception 10
             out.write(true);
             out.write(true);
             ExceptionHandle(value);
             return;
         }
+
+        beta_star = Math.abs(beta_star);
 
         if (flag && dp_star == previous_dp_star) { // same method 10
             out.write(true);

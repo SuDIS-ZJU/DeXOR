@@ -3,7 +3,8 @@ package algorithms.DXOR;
 public class DOXRTools {
 //    private static final double log210 = 1 / Math.log10(2);
     private static final int[] cost = new int[]{0, 4, 7, 10, 14, 17, 20, 24, 27, 30, 34, 37, 40, 44, 47, 50};
-    private static final double eps = 1e-23;
+    private static final double equal_eps = 1e-23;
+    private static final double integer_eps = 1e-6;
     private static final int off = 23;
     private static final double[] P10 = new double[]{1e-23, 1e-22, 1e-21, 1e-20, 1e-19, 1e-18, 1e-17,
             1e-16, 1e-15, 1e-14, 1e-13, 1e-12, 1e-11, 1e-10, 1e-9, 1e-8, 1e-7, 1e-6, 1e-5, 1e-4,
@@ -28,20 +29,20 @@ public class DOXRTools {
 
     public static int comp(double a, double b, double eps) {
         double delta = a - b;
-        if (delta > eps) return 1;
-        if (delta < -eps) return -1;
+        if (delta >= eps) return 1;
+        if (delta <= -eps) return -1;
         return 0;
     }
 
     public static int comp(double a, double b) {
         double delta = a - b;
-        if (delta > eps) return 1;
-        if (delta < -eps) return -1;
+        if (delta > equal_eps) return 1;
+        if (delta < -equal_eps) return -1;
         return 0;
     }
 
     public static boolean isInt(double value) {
-        return comp(value, Math.round(value), eps) == 0;
+        return comp(value, Math.round(value), equal_eps) == 0;
     }
 
     public static boolean isInt(double value, double eps) {
@@ -52,11 +53,11 @@ public class DOXRTools {
 
     public static boolean isEnd(double value, int end) {
         double alpha = value / getP10(end);
-        double beta = value / getP10(end + 1);
+        double beta = value  / getP10(end-1);
         return isInt(alpha) && !isInt(beta);
     }
 
-    public static int getEnd(double value, int last_end) {
+    public static int getEnd_HP(double value, int last_end) {
         if(isEnd(value,last_end))return last_end;
         String s = Double.toString(value);
         int index = s.indexOf('.');
@@ -73,27 +74,28 @@ public class DOXRTools {
         }
     }
 
-//    public static int getEnd(double value, int last_end){
-//        if(comp(value,0,eps) == 0)return 0;
-//        int q = last_end;
-//        double vq =value / getP10(q);
-//        if(isInt(vq,1e-5) ){
-//            vq  = value / getP10(q+1);
-//            while(isInt(vq,1e-5) ){
-//                q++;
-//                vq  = value / getP10(q+1);
-//            }
-//            return q;
-//        }else {
-//            q--;
-//            vq  = value / getP10(q);
-//            while (!isInt(vq,1e-5) ){
-//                q--;
-//                vq  = value / getP10(q);
-//            }
-//            return q;
-//        }
-//    }
+    public static int getEnd(double value, int last_end){
+        if(comp(value,0,equal_eps) == 0)return 0;
+        if(last_end < -12) return getEnd_HP(value,last_end);
+        int q = last_end;
+        double vq =value / getP10(q);
+        if(isInt(vq,integer_eps) ){
+            vq  = value / getP10(q+1);
+            while(isInt(vq,integer_eps) ){
+                q++;
+                vq  = value / getP10(q+1);
+            }
+            return q;
+        }else {
+            q--;
+            vq  = value / getP10(q);
+            while (!isInt(vq,integer_eps) ){
+                q--;
+                vq  = value / getP10(q);
+            }
+            return q;
+        }
+    }
 
     public static int decimalBits(int dp) {
         return cost[dp];
@@ -101,8 +103,8 @@ public class DOXRTools {
 
     public static long truncate(double value) {
         if (isInt(value)) return Math.round(value);
-        if (value > eps) return (long) Math.floor(value);
-        if (value < -eps) return (long) Math.ceil(value);
+        if (value > equal_eps) return (long) Math.floor(value+integer_eps); // rounding error
+        if (value < -equal_eps) return (long) Math.ceil(value-integer_eps);
         return 0;
     }
 
