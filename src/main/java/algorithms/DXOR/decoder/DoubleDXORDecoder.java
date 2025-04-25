@@ -7,8 +7,8 @@ import enums.DataTypeEnums;
 public class DoubleDXORDecoder extends Decoder {
     protected int size = DataTypeEnums.DOUBLE.getSize();
     protected double previous_value = 0;
-    protected int previous_end = 0;
-    protected int previous_dp = 0;
+    protected int previous_q = 0;
+    protected int previous_delta = 0;
 
     protected long previous_exp = 0;
     protected int rubber_cost = 1;
@@ -67,17 +67,16 @@ public class DoubleDXORDecoder extends Decoder {
 
 
         if (con == 0 || con == 1) {
-            if (con == 0) previous_end = in.readInt(5) - 20;
-            previous_dp = in.readInt(4);
-            int k = previous_end + previous_dp;
-            double pow = DOXRTools.getP10(previous_end + previous_dp);
+            if (con == 0) previous_q = in.readInt(5) - 20;
+            previous_delta = in.readInt(4);
+            double pow = DOXRTools.getP10(previous_q + previous_delta);
             previous_alpha = DOXRTools.truncate(previous_value / pow) * pow;
         }
 
         long sign = previous_alpha > 0 ? 1 : -1;
         if (DOXRTools.comp(previous_alpha, 0) == 0) sign = in.readBoolean() ? 1 : -1; // sign
-        long beta_star = sign * in.readLong(DOXRTools.decimalBits(previous_dp));
-        double beta = beta_star * DOXRTools.getP10(previous_end);
+        long beta_star = sign * in.readLong(DOXRTools.decimalBits(previous_delta));
+        double beta = beta_star * DOXRTools.getP10(previous_q);
 
         previous_value = previous_alpha + beta;
 
