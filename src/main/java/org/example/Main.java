@@ -4,7 +4,6 @@ import Experiment.TestBuilder;
 import enums.AlgorithmEnums;
 import enums.DataTypeEnums;
 
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 

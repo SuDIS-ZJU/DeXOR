@@ -17,7 +17,6 @@ public class DoubleDXOREncoder extends Encoder {
     protected int contract_step = 0;
     protected int contract_lim = 8;
 
-    protected long id = 0;
     protected int buffer_size_bits = 4;
     protected int buffer_size;
     protected double[] buffer;
