@@ -7,7 +7,7 @@ public enum AlgorithmEnums {
     Elf("Elf"),
     ElfPlus("ElfPlus"),
     Camel("Camel"),
-    DXOR("DXOR");
+    DeXOR("DeXOR");
 
     private final String name;
 

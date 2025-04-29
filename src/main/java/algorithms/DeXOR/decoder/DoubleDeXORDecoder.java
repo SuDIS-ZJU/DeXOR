@@ -1,10 +1,10 @@
-package algorithms.DXOR.decoder;
+package algorithms.DeXOR.decoder;
 
 import algorithms.Decoder;
-import algorithms.DXOR.DOXRTools;
+import algorithms.DeXOR.DeXORTools;
 import enums.DataTypeEnums;
 
-public class DoubleDXORDecoder extends Decoder {
+public class DoubleDeXORDecoder extends Decoder {
     protected int size = DataTypeEnums.DOUBLE.getSize();
     protected double previous_value = 0;
     protected int previous_q = 0;
@@ -18,12 +18,12 @@ public class DoubleDXORDecoder extends Decoder {
     protected double previous_alpha = 0;
 
 
-    public DoubleDXORDecoder(String inputPath) {
+    public DoubleDeXORDecoder(String inputPath) {
         super(inputPath);
     }
 
     protected double ExceptionDecode() {
-        int bias = DOXRTools.getP2(rubber_cost - 1) - 1;
+        int bias = DeXORTools.getP2(rubber_cost - 1) - 1;
         long delta = in.readInt(rubber_cost) - bias;
         long lv;
         if (delta >= -bias && delta <= bias) {
@@ -34,7 +34,7 @@ public class DoubleDXORDecoder extends Decoder {
             lv = (lv << 52) | seg;
 
             if (rubber_cost > 1) {
-                int su_bias = DOXRTools.getP2(rubber_cost - 2) - 1;
+                int su_bias = DeXORTools.getP2(rubber_cost - 2) - 1;
                 if (delta >= -su_bias && delta <= su_bias) {
                     contract_step++;
                 } else {
@@ -47,7 +47,7 @@ public class DoubleDXORDecoder extends Decoder {
             }
         } else {
             lv = in.readLong(64);
-            previous_exp = DOXRTools.segment(lv, 2, 12);
+            previous_exp = DeXORTools.segment(lv, 2, 12);
 
             if (rubber_cost < 10) {
                 rubber_cost++;
@@ -69,14 +69,14 @@ public class DoubleDXORDecoder extends Decoder {
         if (con == 0 || con == 1) {
             if (con == 0) previous_q = in.readInt(5) - 20;
             previous_delta = in.readInt(4);
-            double pow = DOXRTools.getP10(previous_q + previous_delta);
-            previous_alpha = DOXRTools.truncate(previous_value / pow) * pow;
+            double pow = DeXORTools.getP10(previous_q + previous_delta);
+            previous_alpha = DeXORTools.truncate(previous_value / pow) * pow;
         }
 
         long sign = previous_alpha > 0 ? 1 : -1;
-        if (DOXRTools.comp(previous_alpha, 0) == 0) sign = in.readBoolean() ? 1 : -1; // sign
-        long beta_star = sign * in.readLong(DOXRTools.decimalBits(previous_delta));
-        double beta = beta_star * DOXRTools.getP10(previous_q);
+        if (DeXORTools.comp(previous_alpha, 0) == 0) sign = in.readBoolean() ? 1 : -1; // sign
+        long beta_star = sign * in.readLong(DeXORTools.decimalBits(previous_delta));
+        double beta = beta_star * DeXORTools.getP10(previous_q);
 
         previous_value = previous_alpha + beta;
 

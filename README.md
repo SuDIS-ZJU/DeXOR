@@ -1,4 +1,4 @@
-# D-XOR: XOR-like Transcode in Decimal for Online Lossless Time Series Compression
+# DeXOR: Enabling Decimal-space xor for Online Lossless Time Series Compression
 
 ---
 
@@ -42,9 +42,9 @@ Default is `./storage`.
 `-log [LOG_PATH]` The results of experiment benchmarks will be located in `LOG_PATH`
 Default is `./results`.
 
-`-m [METHOD]` The `[METHOD]` parameter specifies the name of the compression algorithm to be used. Currently supported algorithms include `[Gorilla, Chimp, Chimp128, Elf, ElfPlus, Camel, DXOR]`. 
+`-m [METHOD]` The `[METHOD]` parameter specifies the name of the compression algorithm to be used. Currently supported algorithms include `[Gorilla, Chimp, Chimp128, Elf, ElfPlus, Camel, DeXOR]`. 
 The algorithm names are case-insensitive.
-Default is `DXOR`.
+Default is `DeXOR`.
 
 You can test multiple algorithms in a manner similar to the example provided:
 `java -jar OL-TSC-1.0-jar-with-dependencies.jar -in  ./datasets/Overall -m ATDP Gorilla Chimp Chimp128 Elf ElfPlus`

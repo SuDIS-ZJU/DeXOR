@@ -1,11 +1,11 @@
-package algorithms.DXOR.encoder;
+package algorithms.DeXOR.encoder;
 
 import algorithms.Encoder;
-import algorithms.DXOR.DOXRTools;
+import algorithms.DeXOR.DeXORTools;
 import enums.DataTypeEnums;
 
 
-public class DoubleDXOREncoder extends Encoder {
+public class DoubleDeXOREncoder extends Encoder {
     protected int size = DataTypeEnums.DOUBLE.getSize();
     protected double previous_value = 0;
     protected int previous_q = 0;
@@ -22,7 +22,7 @@ public class DoubleDXOREncoder extends Encoder {
     protected double[] buffer;
 
 
-    public DoubleDXOREncoder(String outputPath) {
+    public DoubleDeXOREncoder(String outputPath) {
         super(outputPath);
         buffer_size = 1<<buffer_size_bits;
         buffer = new double[buffer_size];
@@ -35,16 +35,16 @@ public class DoubleDXOREncoder extends Encoder {
 //        boolean flag = DOXRTools.isEnd(value, q); // same end
 //        if (!flag) q = DOXRTools.getEnd(value);
 
-        int q = DOXRTools.getEnd(value, previous_q);
+        int q = DeXORTools.getEnd(value, previous_q);
         boolean flag = (q == previous_q);
 
 
         int delta = 0;
         double alpha = 0;
         while (delta < 16) {
-            double pow = DOXRTools.getP10(q + delta);
-            double a = DOXRTools.truncate(value / pow) *pow;
-            double b = DOXRTools.truncate(previous_value / pow) *pow;
+            double pow = DeXORTools.getP10(q + delta);
+            double a = DeXORTools.truncate(value / pow) *pow;
+            double b = DeXORTools.truncate(previous_value / pow) *pow;
             if (a == b) {
                 alpha = a;
                 break;
@@ -54,11 +54,11 @@ public class DoubleDXOREncoder extends Encoder {
 
         
 
-        double pow = DOXRTools.getP10(q);
+        double pow = DeXORTools.getP10(q);
         double beta = value - alpha;
         long beta_star = Math.round((beta) / pow);
 
-        if (delta >= 16 || DOXRTools.comp(alpha+beta_star*pow,value,pow) != 0) { // Exception 10
+        if (delta >= 16 || DeXORTools.comp(alpha+beta_star*pow,value,pow) != 0) { // Exception 10
             out.write(true);
             out.write(true);
             ExceptionHandle(value);
@@ -84,27 +84,27 @@ public class DoubleDXOREncoder extends Encoder {
         }
 
         // extra info
-        if (DOXRTools.comp(alpha, 0) == 0) {
+        if (DeXORTools.comp(alpha, 0) == 0) {
             out.write(value > 0); // sign
         }
 
-        out.write(beta_star, DOXRTools.decimalBits(delta));
+        out.write(beta_star, DeXORTools.decimalBits(delta));
         this.previous_value = value;
 
     }
 
     protected void ExceptionHandle(double value) {
         long lv = Double.doubleToRawLongBits(value);
-        long exp = DOXRTools.segment(lv, 2, 12);
+        long exp = DeXORTools.segment(lv, 2, 12);
         long delta = exp - previous_exp;
-        int bias = DOXRTools.getP2(rubber_cost - 1) - 1;
+        int bias = DeXORTools.getP2(rubber_cost - 1) - 1;
         if (delta >= -bias && delta <= bias) {
             out.write(delta + bias, rubber_cost);
             out.write(lv < 0);
             out.write(lv, 52);
 
             if (rubber_cost > 1) {
-                int su_bias = DOXRTools.getP2(rubber_cost - 2) - 1;
+                int su_bias = DeXORTools.getP2(rubber_cost - 2) - 1;
                 if (delta >= -su_bias && delta <= su_bias) {
                     contract_step++;
                 } else {
@@ -116,7 +116,7 @@ public class DoubleDXOREncoder extends Encoder {
                 }
             }
         } else {
-            out.write(DOXRTools.getP2(rubber_cost) - 1, rubber_cost);
+            out.write(DeXORTools.getP2(rubber_cost) - 1, rubber_cost);
             out.write(lv, 64);
             contract_step = 0;
 

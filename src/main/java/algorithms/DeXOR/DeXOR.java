@@ -1,18 +1,18 @@
-package algorithms.DXOR;
+package algorithms.DeXOR;
 
 import algorithms.Algorithm;
 import algorithms.Decoder;
 import algorithms.Encoder;
-import algorithms.DXOR.decoder.DoubleDXORDecoder;
-import algorithms.DXOR.encoder.DoubleDXOREncoder;
+import algorithms.DeXOR.decoder.DoubleDeXORDecoder;
+import algorithms.DeXOR.encoder.DoubleDeXOREncoder;
 import enums.DataTypeEnums;
 
-public class DXOR extends Algorithm {
-    public DXOR(){
+public class DeXOR extends Algorithm {
+    public DeXOR(){
         // Encoder
-        EncoderClassMap.put(DataTypeEnums.DOUBLE.getType(), DoubleDXOREncoder.class);
+        EncoderClassMap.put(DataTypeEnums.DOUBLE.getType(), DoubleDeXOREncoder.class);
         // Decoder
-        DecoderClassMap.put(DataTypeEnums.DOUBLE.getType(), DoubleDXORDecoder.class);
+        DecoderClassMap.put(DataTypeEnums.DOUBLE.getType(), DoubleDeXORDecoder.class);
     }
 
     protected Encoder getEncoder(String data_type, String output_path) throws Exception {

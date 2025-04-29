@@ -12,7 +12,7 @@ public class Main {
         String data_path = "./datasets/Overall";
         String store_path = "./storage";
         String result_path = "./results";
-        AlgorithmEnums[] methods = new AlgorithmEnums[]{AlgorithmEnums.DXOR};
+        AlgorithmEnums[] methods = new AlgorithmEnums[]{AlgorithmEnums.DeXOR};
 //        AlgorithmEnums[] methods = AlgorithmEnums.values();
 
         for (int i = 0; i < args.length; i++) {

@@ -1,6 +1,6 @@
 package algorithms;
 
-import algorithms.DXOR.DXOR;
+import algorithms.DeXOR.DeXOR;
 import algorithms.Camel.Camel;
 import algorithms.Chimp.Chimp;
 import algorithms.Chimp128.Chimp128;
@@ -25,7 +25,7 @@ public class AlgorithmsManager {
         AlgorithmClassMap.put(AlgorithmEnums.GORILLA.getName(), Gorilla.class);
         AlgorithmClassMap.put(AlgorithmEnums.CHIMP.getName(), Chimp.class);
         AlgorithmClassMap.put(AlgorithmEnums.CHIMP128.getName(), Chimp128.class);
-        AlgorithmClassMap.put(AlgorithmEnums.DXOR.getName(), DXOR.class);
+        AlgorithmClassMap.put(AlgorithmEnums.DeXOR.getName(), DeXOR.class);
         AlgorithmClassMap.put(AlgorithmEnums.Elf.getName(), Elf.class);
         AlgorithmClassMap.put(AlgorithmEnums.ElfPlus.getName(), ElfPlus.class);
         AlgorithmClassMap.put(AlgorithmEnums.Camel.getName(), Camel.class);
