@@ -178,7 +178,8 @@ public class DoubleDeXOREncoder extends Encoder {
             if (delta >= 16 || DeXORTools.comp(alpha + beta * pow, value, pow) != 0) { // Exception 10
                 out.write(true);
                 out.write(true);
-                exception_times ++;
+                exception_times++;
+                if (exception_times >= skip_available) skip = true;
                 ExceptionHandle(value);
                 return;
             }
@@ -211,7 +212,7 @@ public class DoubleDeXOREncoder extends Encoder {
         }
 
         protected int encode(double value) {
-            if(exception_times >= skip_available) ExceptionHandle(value);
+            if (skip) ExceptionHandle(value);
             else Decimal_XOR(value);
             return out.track_bits();
         }
@@ -244,10 +245,10 @@ public class DoubleDeXOREncoder extends Encoder {
 
             for (int i = 1; delta > 0 && i < buffer.length; i++) {
                 long b = DeXORTools.truncate(buffer[i] / pow);
-                while(delta > 0 && a == b){
+                while (delta > 0 && a == b) {
                     alpha = a * pow;
                     id = i;
-                    delta --;
+                    delta--;
                     pow = DeXORTools.getP10(q + delta - 1);
                     a = DeXORTools.truncate(value / pow);
                     b = DeXORTools.truncate(buffer[i] / pow);
@@ -272,11 +273,11 @@ public class DoubleDeXOREncoder extends Encoder {
                 // same method 10
                 out.write(true);
                 out.write(false);
-                out.write(id,buffer_bits);
+                out.write(id, buffer_bits);
             } else {
                 out.write(false); // !flag || dp != pre_dp
                 out.write(flag);
-                out.write(id,buffer_bits);
+                out.write(id, buffer_bits);
                 if (!flag) { // 00
                     out.write(q + 20, 5);
                     previous_q = q;

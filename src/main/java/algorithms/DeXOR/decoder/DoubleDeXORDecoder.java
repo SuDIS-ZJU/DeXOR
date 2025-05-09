@@ -17,6 +17,7 @@ public class DoubleDeXORDecoder extends Decoder {
 
     protected double previous_alpha = 0;
     protected Method method = new Native();
+    protected boolean skip = false;
 
     /**
      * from config
@@ -32,8 +33,8 @@ public class DoubleDeXORDecoder extends Decoder {
         super(inputPath);
     }
 
-    public DoubleDeXORDecoder(String inputPath, String config){
-        super(inputPath,config);
+    public DoubleDeXORDecoder(String inputPath, String config) {
+        super(inputPath, config);
         String buffer_bits_config = this.config.get("buffer_bits");
         String rho_config = this.config.get("rho");
         String skip_available_config = this.config.get("skip_available");
@@ -90,11 +91,10 @@ public class DoubleDeXORDecoder extends Decoder {
         return Double.longBitsToDouble(lv);
     }
 
-    protected abstract class Method{
+    protected abstract class Method {
         protected double decodeDouble() {
             int con = in.readInt(2);
             if (con == 3) { // overflow Exception
-//            return in.readDouble(64);
                 return ExceptionDecode();
             }
 
@@ -117,16 +117,16 @@ public class DoubleDeXORDecoder extends Decoder {
         }
     }
 
-    protected class Native extends Method{}
+    protected class Native extends Method {
+    }
 
-    protected class Buffered extends Method{
+    protected class Buffered extends Method {
         protected int total = 0;
 
         @Override
         protected double decodeDouble() {
             int con = in.readInt(2);
             if (con == 3) { // overflow Exception
-//            return in.readDouble(64);
                 return ExceptionDecode();
             }
 
@@ -155,8 +155,37 @@ public class DoubleDeXORDecoder extends Decoder {
         }
     }
 
-    protected class Skippable extends Method{
+    protected class Skippable extends Method {
+        protected int exception_times = 0;
 
+        @Override
+        protected double decodeDouble() {
+            if (skip) return ExceptionDecode();
+            int con = in.readInt(2);
+            if (con == 3) { // overflow Exception
+//            return in.readDouble(64);
+                exception_times++;
+                if (exception_times >= skip_available) skip = true;
+                return ExceptionDecode();
+            }
+            exception_times = 0;
+
+            if (con == 0 || con == 1) {
+                if (con == 0) previous_q = in.readInt(5) - 20;
+                previous_delta = in.readInt(4);
+                double pow = DeXORTools.getP10(previous_q + previous_delta);
+                previous_alpha = DeXORTools.truncate(previous_value / pow) * pow;
+            }
+
+            long sign = previous_alpha > 0 ? 1 : -1;
+            if (DeXORTools.comp(previous_alpha, 0) == 0) sign = in.readBoolean() ? 1 : -1; // sign
+            long beta_star = sign * in.readLong(DeXORTools.decimalBits(previous_delta));
+            double beta = beta_star * DeXORTools.getP10(previous_q);
+
+            previous_value = previous_alpha + beta;
+
+            return previous_value;
+        }
     }
 
     @Override

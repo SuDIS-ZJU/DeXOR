@@ -1,1 +1,1 @@
-DeXOR{buffer_bits:0}
+DeXOR{skip_available:10}
