@@ -14,6 +14,7 @@ public class TestBuilder {
     private final DataTypeEnums data_type;
     private final String data_path;
     private final String store_path;
+    private final String config_path;
 
     private final String result_path;
 
@@ -22,11 +23,12 @@ public class TestBuilder {
     private Map<String, List<List<String>>> results;
     private int index = 0;
 
-    public TestBuilder(DataTypeEnums data_type, String data_path, String store_path, String result_path, AlgorithmEnums[] test_algorithms) {
+    public TestBuilder(DataTypeEnums data_type, String data_path, String store_path, String result_path,String config_path, AlgorithmEnums[] test_algorithms) {
         this.data_type = data_type;
         this.data_path = data_path;
         this.store_path = store_path;
         this.result_path = result_path;
+        this.config_path = config_path;
         algorithms = new ArrayList<>();
         for (AlgorithmEnums algorithmEnum : test_algorithms) {
             algorithms.add(algorithmEnum.getName());
@@ -119,7 +121,7 @@ public class TestBuilder {
         for (String algorithm_name : algorithms) {
             try {
                 String output_path = store_path + "/" + algorithm_name + "/" + dataset_name + "." + algorithm_name.toLowerCase();
-                CompBuilder comp = new CompBuilder(data_type, algorithm_name, dataset_name, table_path, output_path);
+                CompBuilder comp = new CompBuilder(data_type, algorithm_name, dataset_name, table_path, output_path, config_path);
                 comp.compress();
                 Map<String, String> comp_info = comp.getInfo();
                 List<List<String>> result = results.get(algorithm_name);
@@ -140,7 +142,7 @@ public class TestBuilder {
         for (String algorithm_name : algorithms) {
             try {
                 String input_path = store_path + "/" + algorithm_name + "/" + dataset_name + "." + algorithm_name.toLowerCase();
-                DecompBuilder decomp = new DecompBuilder(data_type, algorithm_name, dataset_name, table_path, input_path);
+                DecompBuilder decomp = new DecompBuilder(data_type, algorithm_name, dataset_name, table_path, input_path, config_path);
                 decomp.test_decompress();
                 Map<String, String> decomp_info = decomp.getInfo();
                 List<List<String>> result = results.get(algorithm_name);

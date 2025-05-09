@@ -5,8 +5,13 @@ import algorithms.Decoder;
 import enums.DataTypeEnums;
 import utils.TableStreamer;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DecompBuilder {
     private static final double[] EPS = new double[]{1, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10, 1e-11, 1e-12,
@@ -20,6 +25,7 @@ public class DecompBuilder {
     private final String algorithm_name;
 
     private final String input_path;
+    private final String config_path;
 
     private String table_name;
 
@@ -34,13 +40,36 @@ public class DecompBuilder {
         return info;
     }
 
-    public DecompBuilder(DataTypeEnums dataType, String algorithm_name, String table_name, String table_path, String input_path) throws Exception {
+    public DecompBuilder(DataTypeEnums dataType, String algorithm_name, String table_name, String table_path, String input_path, String config_path) throws Exception {
         this.dataType = dataType;
         this.algorithm_name = algorithm_name;
         this.table_name = table_name;
         this.input_path = input_path;
-        this.decoder = AlgorithmsManager.getDecoder(dataType.getType(), algorithm_name, input_path);
+        this.config_path = config_path;
+        String config = null;
+        if(config_path != null && !config_path.isEmpty())config = seekConfig();
+        if(config == null) this.decoder = AlgorithmsManager.getDecoder(dataType.getType(), algorithm_name, input_path);
+        else this.decoder = AlgorithmsManager.getDecoder(dataType.getType(), algorithm_name, input_path, config);
         this.table = new TableStreamer(table_path);
+    }
+
+    public String seekConfig(){
+        Pattern pattern = Pattern.compile(algorithm_name + "\\{([^}]*)\\}");
+        String line;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(config_path))) {
+            while ((line = reader.readLine()) != null) {
+                // 检查每一行是否包含指定名称的 {}
+                Matcher matcher = pattern.matcher(line);
+                if (matcher.find()) {
+                    // 获取花括号内的内容
+                    return matcher.group(1);
+                }
+            }
+        } catch (IOException e) {
+            return null;
+        }
+        return null;
     }
 
 
@@ -73,9 +102,9 @@ public class DecompBuilder {
                 total++;
 
                 // debug
-//                if (table_name.equals("Air-sensor") && total == 535) {
-//                    int k = 111;
-//                }
+                if (table_name.equals("Air-pressure") && total == 6 ) {
+                    int k = 111;
+                }
                 int place = getDecimalPlace(v);
                 double eps = EPS[place];
                 long start_time = System.nanoTime();

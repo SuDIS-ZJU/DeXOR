@@ -33,4 +33,20 @@ public abstract class Algorithm {
         }
         throw new Exception("No Such Decoder");
     }
+
+    protected Encoder getEncoder(String data_type,String output_path, String config) throws Exception {
+        Class<?> clazz = EncoderClassMap.get(data_type);
+        if (clazz != null) {
+            return (Encoder) clazz.getDeclaredConstructor(String.class, String.class).newInstance(output_path, config);
+        }
+        throw new Exception("No Such Encoder");
+    }
+
+    protected Decoder getDecoder(String data_type, String input_path, String config) throws Exception {
+        Class<?> clazz = DecoderClassMap.get(data_type);
+        if (clazz != null) {
+            return (Decoder) clazz.getDeclaredConstructor(String.class, String.class).newInstance(input_path, config);
+        }
+        throw new Exception("No Such Decoder");
+    }
 }

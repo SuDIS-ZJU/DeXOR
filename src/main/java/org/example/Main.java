@@ -13,6 +13,8 @@ public class Main {
         String store_path = "./storage";
         String result_path = "./results";
         AlgorithmEnums[] methods = new AlgorithmEnums[]{AlgorithmEnums.DeXOR};
+//        String config_path = "./config.txt";
+        String config_path = "";
 //        AlgorithmEnums[] methods = AlgorithmEnums.values();
 
         for (int i = 0; i < args.length; i++) {
@@ -25,6 +27,9 @@ public class Main {
                     break;
                 case "-log":
                     result_path = args[++i];
+                    break;
+                case "-config":
+                    config_path = args[++i];
                     break;
                 case "-m":
                     Set<AlgorithmEnums> set = new HashSet<>();
@@ -42,7 +47,7 @@ public class Main {
             }
         }
 
-        TestBuilder t1 = new TestBuilder(DataTypeEnums.DOUBLE, data_path, store_path, result_path, methods);
+        TestBuilder t1 = new TestBuilder(DataTypeEnums.DOUBLE, data_path, store_path, result_path,config_path, methods);
         t1.test_comp();
         t1.test_decomp();
         t1.write_results();

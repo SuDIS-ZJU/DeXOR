@@ -5,9 +5,13 @@ import algorithms.Encoder;
 import enums.DataTypeEnums;
 import utils.TableStreamer;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CompBuilder {
 
@@ -15,10 +19,11 @@ public class CompBuilder {
     private TableStreamer table;
 
     private DataTypeEnums dataType;
-    private String algorithm_name;
+    private String algorithmName;
     private String outputPath;
     private String tablePath;
-    private String table_name;
+    private String configPath;
+    private String tableName;
 
     private long total = 0;
     private double bits = 0;
@@ -29,14 +34,37 @@ public class CompBuilder {
     Map<String, String> info = new HashMap<>();
 
 
-    public CompBuilder(DataTypeEnums dataType, String algorithm_name, String table_name, String tablePath, String outputPath) throws Exception {
+    public CompBuilder(DataTypeEnums dataType, String algorithm_name, String table_name, String table_path, String output_path, String config_path) throws Exception {
         this.dataType = dataType;
-        this.algorithm_name = algorithm_name;
-        this.tablePath = tablePath;
-        this.table_name = table_name;
-        this.outputPath = outputPath;
-        this.encoder = AlgorithmsManager.getEncoder(dataType.getType(), algorithm_name, outputPath);
+        this.algorithmName = algorithm_name;
+        this.tablePath = table_path;
+        this.tableName = table_name;
+        this.outputPath = output_path;
+        this.configPath = config_path;
+        String config = null;
+        if(!config_path.isEmpty())config = seekConfig();
+        if(config_path != null && config == null)this.encoder = AlgorithmsManager.getEncoder(dataType.getType(), algorithm_name, outputPath);
+        else this.encoder = AlgorithmsManager.getEncoder(dataType.getType(), algorithm_name, outputPath, config);
         this.table = new TableStreamer(tablePath);
+    }
+
+    public String seekConfig(){
+        Pattern pattern = Pattern.compile(algorithmName + "\\{([^}]*)\\}");
+        String line;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(configPath))) {
+            while ((line = reader.readLine()) != null) {
+                // 检查每一行是否包含指定名称的 {}
+                Matcher matcher = pattern.matcher(line);
+                if (matcher.find()) {
+                    // 获取花括号内的内容
+                    return matcher.group(1);
+                }
+            }
+        } catch (IOException e) {
+            return null;
+        }
+        return null;
     }
 
     public Map<String, String> getInfo() {
@@ -57,7 +85,7 @@ public class CompBuilder {
         double comp_speed = (double) (total * dataType.getSize() / 8) / finish_time;
         double comp_bits = bits / total;
 
-        System.out.println(algorithm_name + " compress \"" + table_name + "\" success! Total " + total
+        System.out.println(algorithmName + " compress \"" + tableName + "\" success! Total " + total
                 + " values stored in \"" + outputPath + "\". Finish time is "
                 + result_format(finish_time) + "ms and average bits is " + result_format(comp_bits));
 
@@ -87,7 +115,7 @@ public class CompBuilder {
                 total++;
 
                 // debug
-                if (table_name.equals("Air-sensor") && total == 6014) {
+                if (tableName.equals("Air-pressure") && total == 6  ) {
                     int k = 111;
                 }
 

@@ -53,4 +53,15 @@ public class AlgorithmsManager {
         Algorithm instance = getAlgorithm(algorithm_name);
         return instance.getDecoder(data_type, input_path);
     }
+
+    public static Encoder getEncoder(String data_type, String algorithm_name, String output_path, String config) throws Exception {
+        Algorithm instance = getAlgorithm(algorithm_name);
+        return instance.getEncoder(data_type, output_path, config);
+    }
+
+    public static Decoder getDecoder(String data_type, String algorithm_name, String input_path, String config) throws Exception {
+        Algorithm instance = getAlgorithm(algorithm_name);
+        return instance.getDecoder(data_type, input_path, config);
+    }
+
 }
