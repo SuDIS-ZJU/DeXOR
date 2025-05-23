@@ -136,6 +136,9 @@ public class DoubleALPEncoder extends Encoder {
             int e = best.getE();
             int f = best.getF();
 
+            out.write(e,5);
+            out.write(f,5);
+
             long[] enc_vec = new long[1024];
 
             int exc_num = 0;
