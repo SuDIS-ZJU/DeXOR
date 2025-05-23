@@ -42,22 +42,21 @@ public class CompBuilder {
         this.outputPath = output_path;
         this.configPath = config_path;
         String config = null;
-        if(!config_path.isEmpty())config = seekConfig();
-        if(config_path != null && config == null)this.encoder = AlgorithmsManager.getEncoder(dataType.getType(), algorithm_name, outputPath);
+        if (!config_path.isEmpty()) config = seekConfig();
+        if (config_path != null && config == null)
+            this.encoder = AlgorithmsManager.getEncoder(dataType.getType(), algorithm_name, outputPath);
         else this.encoder = AlgorithmsManager.getEncoder(dataType.getType(), algorithm_name, outputPath, config);
         this.table = new TableStreamer(tablePath);
     }
 
-    public String seekConfig(){
+    public String seekConfig() {
         Pattern pattern = Pattern.compile(algorithmName + "\\{([^}]*)\\}");
         String line;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(configPath))) {
             while ((line = reader.readLine()) != null) {
-                // 检查每一行是否包含指定名称的 {}
                 Matcher matcher = pattern.matcher(line);
                 if (matcher.find()) {
-                    // 获取花括号内的内容
                     return matcher.group(1);
                 }
             }
@@ -115,7 +114,7 @@ public class CompBuilder {
                 total++;
 
                 // debug
-                if (tableName.equals("Air-pressure") && total == 6  ) {
+                if (tableName.equals("Air-pressure") && total == 6) {
                     int k = 111;
                 }
 
@@ -125,6 +124,16 @@ public class CompBuilder {
                 finish_time += (double) (end_time - start_time) / 1000000; // convert to ms
                 table.next();
             } catch (Exception e) {
+                // for batch
+                long start_time = System.nanoTime();
+                int residual = encoder.close();
+                long end_time = System.nanoTime();
+
+                if (residual > 0) {
+                    bits += residual;
+                    finish_time += (double) (end_time - start_time) / 1000000;
+                }
+
                 encoder.flush();
                 break;
             }

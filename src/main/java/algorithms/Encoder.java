@@ -45,6 +45,10 @@ public abstract class Encoder {
         return 0;
     }
 
+    public int close(){
+        return 0;
+    }
+
     public Map<String, String> parseStringToMap(String input) {
         Map<String, String> map = new HashMap<>();
         if (input.startsWith("{") && input.endsWith("}")) {

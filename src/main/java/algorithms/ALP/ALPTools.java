@@ -1,7 +1,7 @@
-package algorithms.DeXOR;
+package algorithms.ALP;
 
-public class DeXORTools {
-//    private static final double log210 = 1 / Math.log10(2);
+public class ALPTools {
+    //    private static final double log210 = 1 / Math.log10(2);
     private static final int[] cost = new int[]{0, 4, 7, 10, 14, 17, 20, 24, 27, 30, 34, 37, 40, 44, 47, 50, 54, 57, 60, 64, 67, 70, 74, 77};
     private static final double equal_eps = 1e-23;
     private static final double integer_eps = 1e-6;
@@ -11,7 +11,7 @@ public class DeXORTools {
             1e-3, 1e-2, 1e-1, 1, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11, 1e12,
             1e13, 1e14, 1e15, 1e16, 1e17, 1e18, 1e19, 1e20, 1e21, 1e22, 1e23};
 
-    private static final long[] P10L = new long[]{1,10,100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000L,100000000000L,1000000000000L,10000000000000L,100000000000000L,1000000000000000L,10000000000000000L,100000000000000000L};
+    private static final long[] P10L = new long[]{1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, 10000000000L, 100000000000L, 1000000000000L, 10000000000000L, 100000000000000L, 1000000000000000L, 10000000000000000L, 100000000000000000L};
 
     private static final int[] P2 = new int[]{1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
 
@@ -50,15 +50,14 @@ public class DeXORTools {
     }
 
 
-
     public static boolean isEnd(double value, int end) {
         double alpha = value / getP10(end);
-        double beta = value  / getP10(end-1);
+        double beta = value / getP10(end - 1);
         return isInt(alpha) && !isInt(beta);
     }
 
     public static int getEnd_HP(double value, int last_end) {
-        if(isEnd(value,last_end))return last_end;
+        if (isEnd(value, last_end)) return last_end;
         String s = Double.toString(value);
         int index = s.indexOf('.');
         if (index == -1) {
@@ -74,24 +73,24 @@ public class DeXORTools {
         }
     }
 
-    public static int getEnd(double value, int last_end){
-        if(comp(value,0,equal_eps) == 0)return 0;
-        if(last_end < -12) return getEnd_HP(value,last_end);
+    public static int getEnd(double value, int last_end) {
+        if (comp(value, 0, equal_eps) == 0) return 0;
+        if (last_end < -12) return getEnd_HP(value, last_end);
         int q = last_end;
-        double vq =value / getP10(q);
-        if(isInt(vq,integer_eps) ){
-            vq  = value / getP10(q+1);
-            while(isInt(vq,integer_eps) ){
+        double vq = value / getP10(q);
+        if (isInt(vq, integer_eps)) {
+            vq = value / getP10(q + 1);
+            while (isInt(vq, integer_eps)) {
                 q++;
-                vq  = value / getP10(q+1);
+                vq = value / getP10(q + 1);
             }
             return q;
-        }else {
+        } else {
             q--;
-            vq  = value / getP10(q);
-            while (!isInt(vq,integer_eps) ){
+            vq = value / getP10(q);
+            while (!isInt(vq, integer_eps)) {
                 q--;
-                vq  = value / getP10(q);
+                vq = value / getP10(q);
             }
             return q;
         }
@@ -103,8 +102,8 @@ public class DeXORTools {
 
     public static long truncate(double value) {
         if (isInt(value)) return Math.round(value);
-        if (value > equal_eps) return (long) Math.floor(value+integer_eps); // rounding error
-        if (value < -equal_eps) return (long) Math.ceil(value-integer_eps);
+        if (value > equal_eps) return (long) Math.floor(value + integer_eps); // rounding error
+        if (value < -equal_eps) return (long) Math.ceil(value - integer_eps);
         return 0;
     }
 
@@ -114,10 +113,27 @@ public class DeXORTools {
         return (v >> (64 - ed)) & mask;
     }
 
-    public static double epsilon(double value){
+    public static double epsilon(double value) {
         long lv = Double.doubleToRawLongBits(value);
-        long exp = segment( lv,2,12);
-        return Double.longBitsToDouble((exp-52)<<52);
+        long exp = segment(lv, 2, 12);
+        return Double.longBitsToDouble((exp - 52) << 52);
     }
 
+    public static class Pair {
+        protected int e;
+        protected int f;
+
+        public Pair(int e, int f) {
+            this.e = e;
+            this.f = f;
+        }
+
+        public int getE() {
+            return e;
+        }
+
+        public int getF() {
+            return f;
+        }
+    }
 }

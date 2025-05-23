@@ -4,12 +4,13 @@ import Experiment.TestBuilder;
 import enums.AlgorithmEnums;
 import enums.DataTypeEnums;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
-        String data_path = "./datasets/HP";//Overall
+        String data_path = "./datasets/Overall";//Overall
         String store_path = "./storage";
         String result_path = "./results";
         AlgorithmEnums[] methods = new AlgorithmEnums[]{AlgorithmEnums.DeXOR};
