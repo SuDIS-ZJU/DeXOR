@@ -1,7 +1,6 @@
 package algorithms;
 
 import algorithms.ALP.ALP;
-import algorithms.DPF.DPF;
 import algorithms.DeXOR.DeXOR;
 import algorithms.Camel.Camel;
 import algorithms.Chimp.Chimp;
@@ -10,6 +9,7 @@ import algorithms.Elf.Elf;
 import algorithms.ElfPlus.ElfPlus;
 import algorithms.ElfStar.ElfStar;
 import algorithms.Gorilla.Gorilla;
+import algorithms.SElfStar.SElfStar;
 import enums.AlgorithmEnums;
 
 import java.util.HashMap;
@@ -35,6 +35,7 @@ public class AlgorithmsManager {
         AlgorithmClassMap.put(AlgorithmEnums.Camel.getName(), Camel.class);
         AlgorithmClassMap.put(AlgorithmEnums.ALP.getName(), ALP.class);
         AlgorithmClassMap.put(AlgorithmEnums.ElfStar.getName(), ElfStar.class);
+        AlgorithmClassMap.put(AlgorithmEnums.SElfStar.getName(), SElfStar.class);
     }
 
     // todo Check_Valid

@@ -13,7 +13,7 @@ public class Main {
         String data_path = "./datasets/Overall";//Overall
         String store_path = "./storage";
         String result_path = "./results";
-        AlgorithmEnums[] methods = new AlgorithmEnums[]{AlgorithmEnums.ALP};
+        AlgorithmEnums[] methods = new AlgorithmEnums[]{AlgorithmEnums.SElfStar};
 //        String config_path = "./config.txt";
         String config_path = "";
 //        AlgorithmEnums[] methods = AlgorithmEnums.values();

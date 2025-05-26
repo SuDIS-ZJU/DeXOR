@@ -10,6 +10,7 @@ public enum AlgorithmEnums {
     DeXOR("DeXOR"),
     ALP("ALP"),
     ElfStar("ElfStar"),
+    SElfStar("SElfStar"),
     DPF("DPF");
 
     private final String name;
