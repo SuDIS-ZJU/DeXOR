@@ -102,7 +102,7 @@ public class DecompBuilder {
                 total++;
 
                 // debug
-                if (table_name.equals("Air-pressure") && total == 6 ) {
+                if (table_name.equals("Wind-Speed") && total == 4828) {
                     int k = 111;
                 }
                 int place = getDecimalPlace(v);

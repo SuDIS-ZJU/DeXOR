@@ -46,20 +46,27 @@ public class TableStreamer {
         }
     }
 
+    public String get(int id) {
+        String res = current_row.get(id);
+//        fill null
+//        if(res.isEmpty()) res = "0";
+        return res;
+    }
+
     public int getInt(int j) {
-        return Integer.parseInt(current_row.get(j));
+        return Integer.parseInt(get(j));
     }
 
     public long getLong(int j) {
-        return Long.parseLong(current_row.get(j));
+        return Long.parseLong(get(j));
     }
 
     public float getFloat(int j) {
-        return Float.parseFloat(current_row.get(j));
+        return Float.parseFloat(get(j));
     }
 
     public double getDouble(int j) {
-        return Double.parseDouble(current_row.get(j));
+        return Double.parseDouble(get(j));
     }
 
     public Serie[] getSeries() {

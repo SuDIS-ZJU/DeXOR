@@ -8,6 +8,7 @@ import algorithms.Chimp.Chimp;
 import algorithms.Chimp128.Chimp128;
 import algorithms.Elf.Elf;
 import algorithms.ElfPlus.ElfPlus;
+import algorithms.ElfStar.ElfStar;
 import algorithms.Gorilla.Gorilla;
 import enums.AlgorithmEnums;
 
@@ -33,6 +34,7 @@ public class AlgorithmsManager {
         AlgorithmClassMap.put(AlgorithmEnums.ElfPlus.getName(), ElfPlus.class);
         AlgorithmClassMap.put(AlgorithmEnums.Camel.getName(), Camel.class);
         AlgorithmClassMap.put(AlgorithmEnums.ALP.getName(), ALP.class);
+        AlgorithmClassMap.put(AlgorithmEnums.ElfStar.getName(), ElfStar.class);
     }
 
     // todo Check_Valid

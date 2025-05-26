@@ -1,46 +1,64 @@
 package algorithms.ALP.decoder;
 
+import algorithms.ALP.ALPTools;
 import algorithms.Decoder;
-import enums.DataTypeEnums;
-import utils.BinaryTools;
 
 public class DoubleALPDecoder extends Decoder {
-    protected int size = DataTypeEnums.DOUBLE.getSize();
-    protected double previous_value = 0;
-    protected int previous_lead = 0;
-    protected int previous_tail = 0;
-    protected boolean first = true;
+    protected double[] buffer = new double[1024];
+    protected int available = 0;
 
     public DoubleALPDecoder(String inputPath) {
         super(inputPath);
     }
 
+    protected long[] Decompress_FFOR() {
+        long[] res = new long[1024];
+
+        int cost = in.readInt(8);
+        long minv = in.readLong(64);
+
+        for (int i = 0; i < 1024; i++) {
+            long v = in.readLong(cost);
+            res[i] = v + minv;
+        }
+        return res;
+    }
+
+    protected void decompress() {
+        int e = in.readInt(5);
+        int f = in.readInt(5);
+
+        int[] exc_id = new int[1024];
+        double[] exc_vec = new double[1024];
+        long[] enc_vec = new long[1024];
+
+        int exc_num = in.readInt(11);
+
+        for (int j = 0; j < exc_num; j++) {
+            exc_id[j] = in.readInt(10);
+            exc_vec[j] = in.readDouble(64);
+        }
+
+        enc_vec = Decompress_FFOR();
+
+        for (int j = 0; j < 1024; j++) {
+            buffer[j] = enc_vec[j] * ALPTools.getP10(-e) * ALPTools.getP10(f);
+        }
+
+        for (int j = 0; j < exc_num; j++) {
+            buffer[exc_id[j]] = exc_vec[j];
+        }
+
+        available += 1024;
+    }
+
     @Override
     public double decodeDouble() {
-        if (first) {
-            previous_value = in.readDouble(size);
-            first = false;
-        } else {
-            boolean c1 = in.readBoolean();
-            if (c1) {
-                return previous_value;
-            }
-
-            boolean c2 = in.readBoolean();
-            long xor = 0;
-            if (c2) {
-                int len = size - previous_lead - previous_tail;
-                xor = in.readLong(len) << previous_tail;
-            } else {
-                int lim_lead = in.readInt(5);
-                int len = in.readInt(6) + 1;
-                int tail = size - len - lim_lead;
-                xor = in.readLong(len) << tail;
-            }
-            previous_lead = BinaryTools.leadZeros(xor, size);
-            previous_tail = BinaryTools.tailZeros(xor, size);
-            previous_value = BinaryTools.xor(xor, previous_value);
+        if(available == 0){
+            decompress();
         }
-        return previous_value;
+        double res = buffer[1024-available];
+        available --;
+        return res;
     }
 }

@@ -40,7 +40,7 @@ public class DoubleALPEncoder extends Encoder {
                         double v = group[i * a][j * b];
                         long enc_v = Math.round(v * ALPTools.getP10(e) * ALPTools.getP10(-f));
                         double dec_v = enc_v * ALPTools.getP10(-e) * ALPTools.getP10(f);
-                        if (dec_v == v) {
+                        if (Double.doubleToRawLongBits(dec_v) == Double.doubleToRawLongBits(v)) {
                             ALPTools.Pair pir = new ALPTools.Pair(e, f);
 
                             int times = pair_map.getOrDefault(pir, 0);
@@ -67,50 +67,56 @@ public class DoubleALPEncoder extends Encoder {
     }
 
     protected ALPTools.Pair second_sampling(double[] row, ALPTools.Pair[] combinations) {
-        Map<ALPTools.Pair, Integer> pair_map = new HashMap<>();
         int c = 1024 / w;
 
-        for (int i = 0; i < w; i++) {
-            double v = row[i * c];
-            for (int j = 0; j < k; j++) {
-                ALPTools.Pair pir = combinations[j];
-                int e = pir.getE();
-                int f = pir.getF();
+        ALPTools.Pair best = new ALPTools.Pair(0, 0);
+        int best_exc_times = 1024;
+        int flag = 0;
 
+        for (int i = 0; i < k; i++) {
+            ALPTools.Pair pir = combinations[i];
+            int e = pir.getE();
+            int f = pir.getF();
+            int exc_times = 0;
+
+            for (int j = 0; j < w; j++) {
+                double v = row[j * c];
                 long enc_v = Math.round(v * ALPTools.getP10(e) * ALPTools.getP10(-f));
                 double dec_v = enc_v * ALPTools.getP10(-e) * ALPTools.getP10(f);
-                if (dec_v == v) {
-                    int times = pair_map.getOrDefault(pir, 0);
-                    pair_map.put(pir, times + 1);
+                if (Double.doubleToRawLongBits(dec_v) != Double.doubleToRawLongBits(v)) {
+                    exc_times++;
                 }
+            }
+
+            if (exc_times < best_exc_times) {
+                best = pir;
+                best_exc_times = exc_times;
+                flag = 0;
+            } else {
+                flag++;
+                if (flag >= 2) break;
             }
         }
 
-        if (pair_map.isEmpty()) return new ALPTools.Pair(0, 0);
 
-        List<Map.Entry<ALPTools.Pair, Integer>> list = new ArrayList<>(pair_map.entrySet());
-
-        // 根据值对列表进行降序排序
-        list.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
-
-        return list.get(0).getKey();
+        return best;
     }
 
 
     protected void FFOR(long[] enc_vec) {
-        long minv = Long.MAX_VALUE;
-        long max_diff = 0;
+        long minv = enc_vec[0];
 
-        for (int i = 0; i < 1024; i++) {
+        for (int i = 1; i < 1024; i++) {
             minv = Math.min(enc_vec[i], minv);
         }
 
+        long max_v = Long.MIN_VALUE;
         for (int i = 0; i < 1024; i++) {
+            max_v = Math.max(enc_vec[i], max_v);
             enc_vec[i] -= minv;
-            max_diff = Math.max(enc_vec[i], max_diff);
         }
 
-        int cost = 64 - BinaryTools.leadZeros(max_diff, size);
+        int cost = 64 - BinaryTools.leadZeros(max_v - minv, size);
 
         out.write(cost, 8);
         out.write(minv, 64);
@@ -136,8 +142,8 @@ public class DoubleALPEncoder extends Encoder {
             int e = best.getE();
             int f = best.getF();
 
-            out.write(e,5);
-            out.write(f,5);
+            out.write(e, 5);
+            out.write(f, 5);
 
             long[] enc_vec = new long[1024];
 
@@ -152,7 +158,7 @@ public class DoubleALPEncoder extends Encoder {
                 double v = group[i][j];
                 long enc_v = Math.round(v * ALPTools.getP10(e) * ALPTools.getP10(-f));
                 double dec_v = enc_v * ALPTools.getP10(-e) * ALPTools.getP10(f);
-                if (dec_v == v) {
+                if (Double.doubleToRawLongBits(dec_v) == Double.doubleToRawLongBits(v)) {
                     if (!first) {
                         first = true;
                         first_suc = enc_v;
@@ -164,7 +170,7 @@ public class DoubleALPEncoder extends Encoder {
                 }
             }
 
-            out.write(exc_num, 10);
+            out.write(exc_num, 11);
 
             for (int j = 0; j < exc_num; j++) {
                 out.write(exc_id[j], 10);
@@ -179,7 +185,7 @@ public class DoubleALPEncoder extends Encoder {
     }
 
     @Override
-    public int close(){
+    public int close() {
         ALP();
         return out.track_bits();
     }
