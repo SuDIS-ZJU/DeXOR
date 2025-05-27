@@ -1,19 +1,18 @@
-package algorithms.DPF;
+package algorithms.BDeXOR;
 
 import algorithms.Algorithm;
-import algorithms.DPF.decoder.DoubleDPFDecoder;
-import algorithms.DPF.encoder.DoubleDPFEncoder;
+import algorithms.BDeXOR.decoder.DoubleBDeXORDecoder;
+import algorithms.BDeXOR.encoder.DoubleBDeXOREncoder;
 import algorithms.Decoder;
 import algorithms.Encoder;
 import enums.DataTypeEnums;
 
-// todo
-public class DPF extends Algorithm {
-    public DPF(){
+public class BDeXOR extends Algorithm {
+    public BDeXOR(){
         // Encoder
-        EncoderClassMap.put(DataTypeEnums.DOUBLE.getType(), DoubleDPFEncoder.class);
+        EncoderClassMap.put(DataTypeEnums.DOUBLE.getType(), DoubleBDeXOREncoder.class);
         // Decoder
-        DecoderClassMap.put(DataTypeEnums.DOUBLE.getType(), DoubleDPFDecoder.class);
+        DecoderClassMap.put(DataTypeEnums.DOUBLE.getType(), DoubleBDeXORDecoder.class);
     }
 
     protected Encoder getEncoder(String data_type, String output_path) throws Exception {

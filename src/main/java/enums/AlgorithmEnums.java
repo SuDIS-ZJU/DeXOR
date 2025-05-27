@@ -11,7 +11,7 @@ public enum AlgorithmEnums {
     ALP("ALP"),
     ElfStar("ElfStar"),
     SElfStar("SElfStar"),
-    DPF("DPF");
+    BDeXOR("BDeXOR");
 
     private final String name;
 

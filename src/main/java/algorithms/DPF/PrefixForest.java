@@ -3,100 +3,96 @@ package algorithms.DPF;
 import java.util.*;
 
 public class PrefixForest {
-    protected Map<DecimalPair, TreeNode> node_map = new HashMap<>();
+    protected TreeNode[][] root = new TreeNode[32][19]; // q in [-20,11], x in [-9,9]
 
     public PrefixForest() {
+        init();
     }
 
-    public static class DecimalPair {
-        public long prefix;
-        public int q;
-
-        public DecimalPair(long prefix, int q) {
-            this.prefix = prefix;
-            this.q = q;
-        }
-
-        public double value() {
-            return prefix * DPFTools.getP10(q);
+    public void init() {
+        for (int i = 0; i < 32; i++) {
+            for (int j = 0; j < 19; j++) root[i][j] = null;
         }
     }
-
-    public static class TreeNode implements Comparable<TreeNode> {
-        protected DecimalPair v;
-        protected int delta =0;
-        protected int cost = 0;
-        protected int w = 0;
-
-        protected TreeNode fa;
-        protected List<TreeNode> sons = new ArrayList<>();
-
-        public TreeNode(DecimalPair v) {
-            this.v = v;
-        }
-
-        public DecimalPair getV() {
-            return v;
-        }
-
-        public int getDelta() {
-            return delta;
-        }
-
-        @Override
-        public int compareTo(TreeNode o) {
-            // 按照数值从小到大排序
-            return (o.w - o.cost) - (this.w - this.cost);
-        }
-    }
-
-    public void clear() {
-        node_map.clear();
-    }
-
-    public TreeNode addNode(DecimalPair v) {
-        if (node_map.containsKey(v)) {
-            return node_map.get(v);
-        }
-        return new TreeNode(v);
-    }
-
 
     public int addChain(double value, int q) {
+        if (value == 0) return 0;
+
         long prefix = DPFTools.truncate(value * DPFTools.getP10(-q));
 
-        int dp = 0;
-        List<TreeNode> chain = new ArrayList<>();
+        int delta = 0; // suffix
+        Stack<TreeNode> stack = new Stack<>();
+
         while (prefix != 0) {
-            DecimalPair v = new DecimalPair(prefix, q);
-            TreeNode node = addNode(v);
-            chain.add(node);
-            node.w -= DPFTools.decimalBits(dp);
+            TreeNode node = new TreeNode(prefix, q + delta);
+            stack.add(node);
+            delta++;
             prefix /= 10;
-            q++;
-            dp++;
         }
-        int delta = dp;
-        int tw = DPFTools.decimalBits(dp);
-        for (TreeNode node : chain) {
-            node.w += tw;
-            node.cost = 5 + 5 + DPFTools.decimalBits(dp);
-            node.delta = dp--;
+
+        int dep = 1; // prefix
+        TreeNode pre_node = stack.pop();
+        pre_node.setDelta(dep);
+
+        if (root[pre_node.getQ() + 20][(int) (pre_node.getPrefix() + 9)] == null) {
+            root[pre_node.getQ() + 20][(int) (pre_node.getPrefix() + 9)] = pre_node;
         }
+        pre_node = root[pre_node.getQ() + 20][(int) (pre_node.getPrefix() + 9)];
+        pre_node.appears();
+
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.pop();
+            node.setDelta(dep);
+            dep++;
+
+            prefix = node.prefix;
+            int key = Math.abs((int) (prefix - (prefix / 10) * 10));
+            TreeNode e_node = pre_node.getChild(key);
+            if (e_node == null) {
+                e_node = node;
+                pre_node.addChild(key, e_node);
+            }
+            e_node.appears();
+
+            pre_node = e_node;
+        }
+
         return delta;
     }
 
-    public List<TreeNode> greedy() {
-        List<TreeNode> list = new ArrayList<>();
-        int dep = 0;
-        for (DecimalPair v : node_map.keySet()) {
-            TreeNode node = node_map.get(v);
-            if (node.w <= node.cost + dep + 1) {
-                break;
+
+    public ArrayList<TreeNode> getList(int batch_size) {
+        PriorityQueue<TreeNode> queue = new PriorityQueue<>();
+        for (int i = 0; i < 32; i++) {
+            for (int j = 0; j < 19; j++) {
+                if (root[i][j] != null) {
+                    root[i][j].updateGain();
+                    queue.add(root[i][j]);
+                }
             }
-            list.add(node);
-            dep++;
         }
+
+        ArrayList<TreeNode> list = new ArrayList<>();
+        int count = 2;
+        int threshold = 4;
+        int bits = 2;
+
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            count++;
+            if (count > threshold) {
+                threshold <<= 1;
+                bits++;
+            }
+            if (node.gain <= bits * batch_size) break;
+
+            list.add(node);
+            for (int key = 0; key < 10; key++) {
+                TreeNode son = node.getChild(key);
+                if (son != null) queue.add(son);
+            }
+        }
+
         return list;
     }
 }
