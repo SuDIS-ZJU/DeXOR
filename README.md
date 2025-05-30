@@ -7,7 +7,7 @@ This repository contains the code, datasets, and supplemental material for the p
 
 # <span style="color: red;">Supplemental Material</span>
 
-More technical details, supporting theory and proofs, and additional experimental details can be found in the [Appendix]([document/Appendix.pdf](https://github.com/SuDIS-ZJU/DeXOR/blob/master/document/Appendix.pdf). Downloading the file to a local PDF viewer is recommended for better readability. 📖
+More technical details, supporting theory and proofs, and additional experimental details can be found in the [Appendix](document/Appendix.pdf). Downloading the file to a local PDF viewer is recommended for better readability. 📖
 
 # Project Structure
 
