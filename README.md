@@ -15,7 +15,7 @@ This project is constructed using **Maven** and includes a variety of compressio
 
 # Getting Started
 
-We recommend using **IntelliJ IDEA** to build this project. After cloning this repository, the project can be built using Maven:
+We recommend using **IntelliJ IDEA** to build this project. After cloning this repository, the project can be built using **Maven**:
 
 ```bash
   mvn clean install
