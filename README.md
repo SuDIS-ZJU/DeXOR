@@ -33,8 +33,8 @@ Ensure that your runtime environment has **Java 8** installed before starting th
 
 To run this package, use the `java -jar` command, as shown below:
 
-```
-java -jar target/OL-TSC-1.0-jar-with-dependencies.jar -in [INPUT_PATH] -out [OUTPUT_PATH] -log [LOG_PATH] -m [METHOD] -config [CONFIG_PATH]
+```bash
+  java -jar target/OL-TSC-1.0-jar-with-dependencies.jar -in [INPUT_PATH] -out [OUTPUT_PATH] -log [LOG_PATH] -m [METHOD] -config [CONFIG_PATH]
 ```
 
 The following options are available for customizing the compression process:
