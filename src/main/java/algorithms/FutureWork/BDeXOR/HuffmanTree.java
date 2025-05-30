@@ -1,4 +1,4 @@
-package algorithms.BDeXOR;
+package algorithms.FutureWork.BDeXOR;
 
 import utils.StreamWriter;
 

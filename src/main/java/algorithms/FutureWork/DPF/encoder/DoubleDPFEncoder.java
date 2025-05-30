@@ -1,8 +1,8 @@
-package algorithms.DPF.encoder;
+package algorithms.FutureWork.DPF.encoder;
 
-import algorithms.DPF.DPFTools;
-import algorithms.DPF.PrefixForest;
-import algorithms.DPF.TreeNode;
+import algorithms.FutureWork.DPF.DPFTools;
+import algorithms.FutureWork.DPF.PrefixForest;
+import algorithms.FutureWork.DPF.TreeNode;
 import algorithms.Encoder;
 import enums.DataTypeEnums;
 

@@ -1,7 +1,4 @@
-package algorithms.DPF;
-
-import java.util.ArrayList;
-import java.util.List;
+package algorithms.FutureWork.DPF;
 
 public class TreeNode implements Comparable<TreeNode>{
     protected long prefix;

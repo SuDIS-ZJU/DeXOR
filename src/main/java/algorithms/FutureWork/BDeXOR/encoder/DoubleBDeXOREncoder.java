@@ -1,12 +1,11 @@
-package algorithms.BDeXOR.encoder;
+package algorithms.FutureWork.BDeXOR.encoder;
 
-import algorithms.BDeXOR.BDeXORTools;
-import algorithms.BDeXOR.HuffmanTree;
+import algorithms.FutureWork.BDeXOR.BDeXORTools;
+import algorithms.FutureWork.BDeXOR.HuffmanTree;
 import algorithms.Encoder;
 import enums.DataTypeEnums;
 
 import java.util.Arrays;
-import java.util.List;
 
 
 public class DoubleBDeXOREncoder extends Encoder {

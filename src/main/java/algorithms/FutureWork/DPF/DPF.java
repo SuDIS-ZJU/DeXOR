@@ -1,8 +1,8 @@
-package algorithms.DPF;
+package algorithms.FutureWork.DPF;
 
 import algorithms.Algorithm;
-import algorithms.DPF.decoder.DoubleDPFDecoder;
-import algorithms.DPF.encoder.DoubleDPFEncoder;
+import algorithms.FutureWork.DPF.decoder.DoubleDPFDecoder;
+import algorithms.FutureWork.DPF.encoder.DoubleDPFEncoder;
 import algorithms.Decoder;
 import algorithms.Encoder;
 import enums.DataTypeEnums;

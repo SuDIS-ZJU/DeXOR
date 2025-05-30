@@ -1,6 +1,6 @@
-package algorithms.DPF.decoder;
+package algorithms.FutureWork.DPF.decoder;
 
-import algorithms.DPF.DPFTools;
+import algorithms.FutureWork.DPF.DPFTools;
 import algorithms.Decoder;
 import enums.DataTypeEnums;
 

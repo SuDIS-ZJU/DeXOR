@@ -1,8 +1,8 @@
-package algorithms.BDeXOR;
+package algorithms.FutureWork.BDeXOR;
 
 import algorithms.Algorithm;
-import algorithms.BDeXOR.decoder.DoubleBDeXORDecoder;
-import algorithms.BDeXOR.encoder.DoubleBDeXOREncoder;
+import algorithms.FutureWork.BDeXOR.decoder.DoubleBDeXORDecoder;
+import algorithms.FutureWork.BDeXOR.encoder.DoubleBDeXOREncoder;
 import algorithms.Decoder;
 import algorithms.Encoder;
 import enums.DataTypeEnums;

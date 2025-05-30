@@ -1,6 +1,6 @@
-package algorithms.BDeXOR.decoder;
+package algorithms.FutureWork.BDeXOR.decoder;
 
-import algorithms.BDeXOR.BDeXORTools;
+import algorithms.FutureWork.BDeXOR.BDeXORTools;
 import algorithms.Decoder;
 import enums.DataTypeEnums;
 

@@ -1,7 +1,7 @@
-package algorithms.BDeXOR;
+package algorithms.FutureWork.DPF;
 
-public class BDeXORTools {
-//    private static final double log210 = 1 / Math.log10(2);
+public class DPFTools {
+    public static final double Log = 1 / Math.log10(2);
     private static final int[] cost = new int[]{0, 4, 7, 10, 14, 17, 20, 24, 27, 30, 34, 37, 40, 44, 47, 50, 54, 57, 60, 64, 67, 70, 74, 77};
     private static final double equal_eps = 1e-23;
     private static final double integer_eps = 1e-6;
@@ -19,8 +19,8 @@ public class BDeXORTools {
         return P10[pow + off];
     }
 
-    public static long getP10L(int pow) {
-        return P10L[pow];
+    public static double getP10L(int pow) {
+        return P10[pow];
     }
 
     public static int getP2(int pow) {
@@ -32,24 +32,6 @@ public class BDeXORTools {
         if (delta >= eps) return 1;
         if (delta <= -eps) return -1;
         return 0;
-    }
-
-    public static int binaryLength(int v) {
-        int res = 0;
-        while (v != 0) {
-            v >>= 1;
-            res++;
-        }
-        return res;
-    }
-
-    public static int binaryLength(long v) {
-        int res = 0;
-        while (v != 0) {
-            v >>= 1;
-            res++;
-        }
-        return res;
     }
 
     public static int comp(double a, double b) {
@@ -116,7 +98,8 @@ public class BDeXORTools {
     }
 
     public static int decimalBits(int dp) {
-        return cost[dp];
+        if(dp < cost.length) return cost[dp];
+        return (int) Math.ceil(dp / Math.log10(2));
     }
 
     public static long truncate(double value) {
@@ -130,6 +113,15 @@ public class BDeXORTools {
         int len = ed - st + 1;
         long mask = (1L << len) - 1;
         return (v >> (64 - ed)) & mask;
+    }
+
+    public static int getBitLength(int v){
+        int res = 0;
+        while (v != 0){
+            v>>=1;
+            res++;
+        }
+        return res;
     }
 
     public static double epsilon(double value){
