@@ -1,9 +1,9 @@
 
-# DeXOR: Enabling Decimal-space XOR for Online Lossless Time Series Compression
+# DeXOR: Enabling XOR in Decimal Space for Streaming Lossless Compression of Floating-point Data
 
 ---
 
-This repository contains the code, datasets, and supplemental material for the paper titled "DeXOR: Enabling Decimal-space XOR for Online Lossless Time Series Compression." 📚
+This repository contains the code, datasets, and supplemental materials for the paper titled "DeXOR: Enabling XOR in Decimal Space for Streaming Lossless Compression of Floating-point Data".📚
 
 # <span style="color: red;">Supplemental Material</span>
 
