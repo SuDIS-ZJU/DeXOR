@@ -3,7 +3,7 @@
 
 ---
 
-This repository contains the code, datasets, and supplemental materials for the paper titled "DeXOR: Enabling XOR in Decimal Space for Streaming Lossless Compression of Floating-point Data".📚
+This repository contains the code, datasets, and supplementary material for the paper titled "DeXOR: Enabling XOR in Decimal Space for Streaming Lossless Compression of Floating-point Data".📚
 
 # <span style="color: red;">Supplemental Material</span>
 
