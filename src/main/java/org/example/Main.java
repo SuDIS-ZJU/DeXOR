@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
-        String data_path = "./datasets/Overall";//Overall
+        String data_path = "./datasets/Overall";//Overall standardized zero_mean
         String store_path = "./storage";
         String result_path = "./results";
         AlgorithmEnums[] methods = new AlgorithmEnums[]{AlgorithmEnums.DeXOR};

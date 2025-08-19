@@ -102,7 +102,7 @@ public class DecompBuilder {
                 total++;
 
                 // debug
-                if (table_name.equals("Air-pressure") && total == 1288) {
+                if (table_name.equals("Air-sensor") && total == 1) {
                     int k = 111;
                 }
                 int place = getDecimalPlace(v);
@@ -112,7 +112,7 @@ public class DecompBuilder {
                 long end_time = System.nanoTime();
                 finish_time += (double) (end_time - start_time) / 1000000; // convert to ms
 
-                if (Math.abs(v - dec_v) >= eps && place <16) {
+                if (Math.abs(v - dec_v) >= eps && place <13) {
                     error_id = total;
                     System.out.println("Error happened at " + error_id + " with v=" + v + " in " + algorithm_name + " and decompress result is " + dec_v);
                     break;

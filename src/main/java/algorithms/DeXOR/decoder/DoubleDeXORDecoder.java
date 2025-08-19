@@ -11,7 +11,7 @@ public class DoubleDeXORDecoder extends Decoder {
     protected int previous_q = 0;
     protected int previous_delta = 0;
 
-    protected long previous_exp = 0;
+    protected long previous_exp = 1023;
     protected int EL = 1;
     protected int contract_step = 0;
 

@@ -114,7 +114,7 @@ public class CompBuilder {
                 total++;
 
                 // debug
-                if (tableName.equals("Air-pressure") && total == 1288) {
+                if (tableName.equals("Air-sensor") && total == 1) {
                     int k = 111;
                 }
 
