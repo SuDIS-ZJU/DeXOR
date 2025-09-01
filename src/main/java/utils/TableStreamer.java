@@ -6,6 +6,7 @@ import org.apache.commons.csv.CSVRecord;
 
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class TableStreamer {
@@ -71,6 +72,10 @@ public class TableStreamer {
 
     public Serie[] getSeries() {
         return series;
+    }
+
+    public int column(){
+        return series.length;
     }
 
 }

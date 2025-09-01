@@ -1,0 +1,131 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Unit-Test-Cpp
+
+on:
+  push:
+    branches:
+      - develop
+      - iotdb
+      - rc/*
+    paths-ignore:
+      - 'docs/**'
+      - 'java/**'
+  pull_request:
+    branches:
+      - develop
+      - dev/*
+      - iotdb
+      - rc/*
+    paths-ignore:
+      - 'docs/**'
+      - 'java/**'
+  # Enable manually starting builds, and allow forcing updating of SNAPSHOT dependencies.
+  workflow_dispatch:
+    inputs:
+      forceUpdates:
+        description: "Forces a snapshot update"
+        required: false
+        default: 'false'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3
+  DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+
+jobs:
+  unit-test:
+    strategy:
+      fail-fast: false
+      max-parallel: 15
+      matrix:
+        include:
+          # Linux all
+          - os: ubuntu-latest
+            build_type: Debug
+            enable_asan: Asan
+          - os: ubuntu-latest
+            build_type: Debug
+            enable_asan: NoAsan
+          - os: ubuntu-latest
+            build_type: Release
+            enable_asan: Asan
+          - os: ubuntu-latest
+            build_type: Release
+            enable_asan: NoAsan
+
+          # macOS exclude Release+ASan
+          - os: macos-latest
+            build_type: Debug
+            enable_asan: Asan
+          - os: macos-latest
+            build_type: Debug
+            enable_asan: NoAsan
+          - os: macos-latest
+            build_type: Release
+            enable_asan: NoAsan
+
+          # Windows just Release
+          - os: windows-latest
+            build_type: Release
+            enable_asan: NoAsan
+    runs-on: ${{ matrix.os }}
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Setup caching of the artifacts in the .m2 directory, so they don't have to
+      # all be downloaded again for every build.
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2-
+
+      # On Windows systems the 'mvnw' script needs an additional ".cmd" appended.
+      - name: Calculate platform suffix
+        id: platform_suffix
+        uses: actions/github-script@v7.0.1
+        env:
+          OS: ${{ matrix.os }}
+        with:
+          script: |
+            const { OS } = process.env
+            if (OS.includes("windows")) {
+              core.setOutput('platform_suffix', `.cmd`)
+            } else {
+              core.setOutput('platform_suffix', ``)
+            }
+
+      - name: Install clang-format
+        shell: bash
+        run: |
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-17 100
+            sudo update-alternatives --set clang-format /usr/bin/clang-format-17
+          elif [[ "$RUNNER_OS" == "Windows" ]]; then
+            choco install llvm --version 17.0.6 --force
+          else
+            brew install llvm@17
+            ln -sf $(brew --prefix llvm@17)/bin/clang-format /opt/homebrew/bin/clang-format
+          fi
+
+      # Run the actual maven build including all tests.
+      - name: Build and test with Maven
+        shell: bash
+        run: |
+          if [ "${{ matrix.enable_asan }}" = "Asan" ]; then
+            ASAN_VALUE="ON"
+          else
+            ASAN_VALUE="OFF"
+          fi
+          ./mvnw${{ steps.platform_suffix.outputs.platform_suffix }} -P with-cpp \
+           -Denable.asan=$ASAN_VALUE -Dbuild.type=${{ matrix.build_type }} clean verify
+

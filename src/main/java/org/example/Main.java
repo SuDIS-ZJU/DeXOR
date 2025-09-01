@@ -1,16 +1,19 @@
 package org.example;
 
 import Experiment.TestBuilder;
+//import Experiment.TsfileTestBuilder;
 import enums.AlgorithmEnums;
 import enums.DataTypeEnums;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+
+import static Experiment.TsfileTestBuilder.test_vector_tsfile;
 
 public class Main {
+
+
     public static void main(String[] args) {
-        String data_path = "./datasets/Overall";//Overall standardized zero_mean
+        String data_path = "./datasets/Overall";
         String store_path = "./storage";
         String result_path = "./results";
         AlgorithmEnums[] methods = new AlgorithmEnums[]{AlgorithmEnums.DeXOR};
@@ -52,5 +55,6 @@ public class Main {
         t1.test_comp();
         t1.test_decomp();
         t1.write_results();
+
     }
 }
