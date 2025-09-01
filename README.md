@@ -29,6 +29,22 @@ Once the build process is complete, the resultant JAR file, which includes all d
 
 Ensure that your runtime environment has **Java 8** installed before starting the compression process. 💻
 
+
+* To rigorously replicate the experiments reported herein, one must first pre-install Apache IoTDB’s native columnar storage engine, **TSFile**(https://github.com/apache/tsfile), and subsequently augment the project’s `pom.xml` with the requisite dependency.
+
+```xml
+<!-- pom.xml -->
+<dependency>
+  <groupId>org.apache.tsfile</groupId>
+  <artifactId>tsfile</artifactId>
+  <version>2.2.0-SNAPSHOT</version>
+</dependency>
+```
+
+* The TSFile implementation incorporating DeXOR resides within this project, compile it according to the provided tutorial:
+  [Building Tsfile with Java](./tsfile/java/tsfile/README.md)
+
+
 # Parameter Introduction
 
 To run this package, use the `java -jar` command, as shown below:
