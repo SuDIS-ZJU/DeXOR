@@ -1,0 +1,58 @@
+# DeXOR+ Configuration File
+# Format: AlgorithmName{key:value,key:value}
+
+# ==================== Global Settings ====================
+# verification_mode: bitwise/precision/none (raw-bit, reported-precision, or no verification)
+# Legacy verify:true/false remains supported as bitwise/none.
+# lossy_only: comma-separated list of algorithms that only support lossy mode
+# decimal_places: default decimal places for lossy compression (used if not specified via -lossy flag)
+# =========================================================
+global{verification_mode:bitwise,lossy_only:DeXORPlus;SimPiece;MixPiece;SZ3;SZ3v2;Camel,decimal_places:-1,failed_decimal_places:6}
+
+# ==================== Algorithm Settings ====================
+
+# DeXORPlus - lossy compression
+# epsilon is calculated from decimal places (epsilon = -decimalPlaces)
+# predictor: DELTA, MAE, or ARIMA
+# predictor_size: window size for MAE/ARIMA
+DeXORPlus{predictor:DELTA,predictor_size:30}
+
+# DeXOR - mode is strict (bitwise-safe fallback) or fast (decimal validation)
+# buffer_bits controls buffering (0 for no buffer); rho and skip_available keep their existing meanings.
+DeXOR{mode:strict,buffer_bits:0,rho:8,skip_available:-1}
+
+# Gorilla - no special configuration
+Gorilla{}
+
+# Chimp - no special configuration
+Chimp{}
+
+# Chimp128 - no special configuration
+Chimp128{}
+
+# Elf - no special configuration
+Elf{}
+
+# ElfPlus - no special configuration
+ElfPlus{}
+
+# Camel - no special configuration
+Camel{}
+
+# ALP - no special configuration
+ALP{}
+
+# LZ4 - compression level (0-12, default 1)
+LZ4{level:1}
+
+# Zstd - compression level (1-22, default 3)
+Zstd{level:3}
+
+# Snappy - no special configuration
+Snappy{}
+
+# SZ3 - error bound for lossy compression
+SZ3{eb:0.01}
+
+# SZ3v2 - error bound for lossy compression (independent implementation)
+SZ3v2{eb:0.01}

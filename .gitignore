@@ -1,0 +1,29 @@
+/datasets/test/1_multi/
+/storage_test/
+/datasets/debug/
+/storage/
+/results/
+/datasets/test_single/
+
+# IDE and local metadata
+/.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Build products
+/target/
+**/target/
+*.class
+
+# Runtime and debugging artifacts
+/logs/
+/output/
+/classes/
+/debug.txt
+*.log
+hs_err_pid*.log
+
+# Local one-off diagnostic programs (contain machine-specific paths)
+/src/test/java/algorithms/ALP/ALPTest.java
+/src/test/java/algorithms/ALP/BitStreamTest.java
