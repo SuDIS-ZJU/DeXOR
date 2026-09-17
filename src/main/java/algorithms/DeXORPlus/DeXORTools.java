@@ -56,58 +56,29 @@ public class DeXORTools {
         return isInt(alpha) && !isInt(beta);
     }
 
-    public static int getEnd_HP(double value, int last_end) {
-        if (isEnd(value, last_end)) return last_end;
-        String s = Double.toString(value);
-        int index = s.indexOf('.');
-        if (index == -1) {
-            char[] c = s.toCharArray();
-            int e = 0;
-            for (int i = c.length - 1; i >= 0; i--) {
-                if (c[i] != '0') break;
-                e++;
-            }
-            return e;
-        } else {
-            return index - (s.length() - 1);
-        }
-    }
-
-    public static int getEnd(double value, int last_end) {
-        if (comp(value, 0, equal_eps) == 0) return 0;
-        if (last_end < -12) return getEnd_HP(value, last_end);
-        int q = last_end;
-        double vq = value / getP10(q);
-        if (isInt(vq, integer_eps)) {
-            vq = value / getP10(q + 1);
-            while (isInt(vq, integer_eps)) {
-                q++;
-                vq = value / getP10(q + 1);
-            }
-            return q;
-        } else {
-            q--;
-            vq = value / getP10(q);
-            while (!isInt(vq, integer_eps)) {
-                q--;
-                vq = value / getP10(q);
-            }
-            return q;
-        }
+    private static boolean isNonzeroInteger(double value) {
+        return Double.isFinite(value)
+                && Math.abs(value) >= integer_eps
+                && isInt(value, integer_eps);
     }
 
     public static int getEndWithEpsilon(double value, int epsilon) {
-        if (comp(value, 0, equal_eps) == 0) return 0;
+        if (value == 0.0) return 0;
+        int minQ = -off;
+        int maxQ = P10.length - 1 - off;
+        if (epsilon < minQ || epsilon > maxQ) {
+            throw new IllegalArgumentException(
+                    "Unsupported decimal coordinate: " + epsilon);
+        }
         int q = epsilon;
-        double vq = value / getP10(q);
-        if (isInt(vq, integer_eps)) {
-            vq = value / getP10(q + 1);
-            while (isInt(vq, integer_eps)) {
-                q++;
-                vq = value / getP10(q + 1);
-            }
+        if (!isNonzeroInteger(value / getP10(q))) {
             return q;
-        } else return epsilon;
+        }
+        while (q < maxQ
+                && isNonzeroInteger(value / getP10(q + 1))) {
+            q++;
+        }
+        return q;
     }
 
     public static int decimalBits(int dp) {

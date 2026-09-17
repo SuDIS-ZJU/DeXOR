@@ -216,6 +216,14 @@ public class DoubleDeXOREncoder extends Encoder {
 
         @Override
         protected void Decimal_XOR(double value) {
+            if (value != 0.0 && Math.abs(value) < 1e-8) {
+                out.write(true);
+                out.write(true);
+                exception_times++;
+                if (exception_times >= skip_available) skip = true;
+                ExceptionHandle(value);
+                return;
+            }
             int q = DeXORTools.getEnd(value, previous_q);
 
             int delta = 0;
@@ -282,6 +290,12 @@ public class DoubleDeXOREncoder extends Encoder {
 
         @Override
         protected void Decimal_XOR(double value) {
+            if (value != 0.0 && Math.abs(value) < 1e-8) {
+                out.write(true);
+                out.write(true);
+                ExceptionHandle(value);
+                return;
+            }
             int q = DeXORTools.getEnd(value, previous_q);
 
             int delta = 0;
